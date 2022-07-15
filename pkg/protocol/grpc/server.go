@@ -32,8 +32,6 @@ func RunServer(ctx context.Context, port string) error {
 	reflection.Register(server)
 	userapi.NewUserServer(*server)
 
-	// v1.RegisterToDoServiceServer(server, v1API)
-
 	// graceful shutdown
 	c := make(chan os.Signal, 1)
 	signal.Notify(c, os.Interrupt)
@@ -49,6 +47,6 @@ func RunServer(ctx context.Context, port string) error {
 	}()
 
 	// start gRPC server
-	logger.Log.Info("starting gRPC server...")
+	logger.Log.Info("starting gRPC server...Port: "+port)
 	return server.Serve(listen)
 }

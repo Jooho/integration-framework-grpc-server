@@ -3,7 +3,7 @@ module github.com/Jooho/integration-framework-server
 go 1.18
 
 require (
-	go.uber.org/zap v1.10.0
+	go.uber.org/zap v1.18.1
 	google.golang.org/grpc v1.47.0
 	google.golang.org/protobuf v1.28.0
 	k8s.io/api v0.24.2
@@ -14,15 +14,15 @@ require (
 
 require (
 	github.com/golang/protobuf v1.5.2 // indirect
-	go.uber.org/atomic v1.4.0 // indirect
-	go.uber.org/multierr v1.1.0 // indirect
+	go.uber.org/atomic v1.7.0 // indirect
+	go.uber.org/multierr v1.6.0 // indirect
 )
 
 require (
 	github.com/go-logr/logr v1.2.0 // indirect
 	github.com/gogo/protobuf v1.3.2 // indirect
 	github.com/google/gofuzz v1.1.0 // indirect
-	github.com/grpc-ecosystem/go-grpc-middleware v1.3.0
+	github.com/grpc-ecosystem/go-grpc-middleware v1.3.1-0.20220714235827-7fdae0e41d21
 	github.com/json-iterator/go v1.1.12 // indirect
 	github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd // indirect
 	github.com/modern-go/reflect2 v1.0.2 // indirect
@@ -38,3 +38,5 @@ require (
 	sigs.k8s.io/structured-merge-diff/v4 v4.2.1 // indirect
 	sigs.k8s.io/yaml v1.2.0 // indirect
 )
+//zap - "transport is closing" issue, so at this moment, I am using master branch
+//https://github.com/grpc-ecosystem/go-grpc-middleware/pull/452
