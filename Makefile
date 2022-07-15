@@ -33,9 +33,8 @@ setup: lib-clean lib-install
 gen-v1-proto:
 	find ./api/proto/v1 -name "*.proto" | xargs -I % sh -c 'protoc --proto_path=. --proto_path=protoc3 --proto_path=./vendor  --go_out /tmp --go_opt paths=source_relative --go-grpc_out /tmp --go-grpc_opt paths=source_relative %'
 
-	cp -R /tmp/api/proto/* ./pkg/api/
-	rm -rf ./pkg/api/proto 
-	
+	cp -R /tmp/api/proto/v1/*.go ./pkg/api/v1/
+		
 	go mod tidy
 	go mod vendor
 	 

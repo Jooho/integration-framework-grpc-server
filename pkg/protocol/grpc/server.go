@@ -8,7 +8,7 @@ import (
 
 	"github.com/Jooho/integration-framework-server/pkg/logger"
 	"github.com/Jooho/integration-framework-server/pkg/protocol/grpc/middleware"
-	userapi "github.com/Jooho/integration-framework-server/pkg/user"
+	userapi "github.com/Jooho/integration-framework-server/pkg/apis/user"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
 )

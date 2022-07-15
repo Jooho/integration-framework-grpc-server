@@ -4,7 +4,7 @@ import (
 	"math/rand"
 	// "time"
 
-	userpb "github.com/Jooho/integration-framework-server/pkg/api/v1"
+	v1pb "github.com/Jooho/integration-framework-server/pkg/api/v1"
 	// "google.golang.org/protobuf/types/known/structpb"
 	"google.golang.org/protobuf/types/known/timestamppb"
 	// v1 "k8s.io/api/core/v1"
@@ -51,7 +51,7 @@ import (
 
 
 
-var UserData = []*userpb.UserMessage{
+var UserData = []*v1pb.UserMessage{
 	{
 		UserId: "1",
 		Name: "Henry",

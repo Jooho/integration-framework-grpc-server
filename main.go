@@ -6,7 +6,7 @@ import (
 	"net"
 	"time"
 
-	userapi "github.com/Jooho/integration-framework-server/pkg/api/v1"
+	"github.com/Jooho/integration-framework-server/pkg/apis/user"
 	grpc_middleware "github.com/grpc-ecosystem/go-grpc-middleware"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
@@ -40,7 +40,7 @@ func main() {
 
 	reflection.Register(grpcServer)
 
-	userapi.NewUserServer(*grpcServer)
+	user.NewUserServer(*grpcServer)
 
 	
 

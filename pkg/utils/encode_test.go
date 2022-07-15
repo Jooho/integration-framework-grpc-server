@@ -6,7 +6,7 @@ import (
 	"reflect"
 	"testing"
 
-	userpb "github.com/Jooho/integration-framework-server/pkg/api/v1/user"
+	v1pb "github.com/Jooho/integration-framework-server/pkg/api/v1"
 	"google.golang.org/protobuf/types/known/timestamppb"
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -67,7 +67,7 @@ func TestJsonDeserializer(t *testing.T) {
 }
 func TestConvertProtobufObj(t *testing.T) {
 
-	userData := []*userpb.UserMessage{
+	userData := []*v1pb.UserMessage{
 		{
 			UserId:      "1",
 			Name:        "Henry",
@@ -94,7 +94,7 @@ func TestConvertProtobufObj(t *testing.T) {
 		jsonUser := ProtobufToJson(user)
 		testname := "Convert proto message object to json and json to proto message"
 		t.Run(testname, func(t *testing.T) {
-			emptyUserProtobuf := &userpb.UserMessage{}
+			emptyUserProtobuf := &v1pb.UserMessage{}
 			JsonToProtobuf(jsonUser, emptyUserProtobuf)
 			if emptyUserProtobuf == userData[i] {
 				t.Errorf("got %v, want %v", emptyUserProtobuf, userData[i])
