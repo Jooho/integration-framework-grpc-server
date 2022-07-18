@@ -1,43 +1,50 @@
 syntax = "proto3";
 
-package v1;
+package api;
 
-option go_package = "github.com/Jooho/integration-framework-server/pkg/api/v1";
+option go_package = ".;modelserving";
 
 service ModelServing {
-    rpc GetSubscribe(GetSubscribeRequest) returns (GetSubscribeResponse);
-}
-
-message Subscribe {
-    string category = 1;
+  rpc ListApp(GetAppRequest) returns (GetAppResponse);
+  rpc GetAppParams(GetAppParamsRequest) returns (GetAppParamsResponse);
+  rpc GetAppCustomResource(GetAppCRRequest) returns (GetAppCRResponse);
 }
 
 message Application {
-    string name = 1;
-    bool opensource =2 ;
-    string csvName =3;
-    string version =4;
-    bool installed =5;
-    bool marketplaceImage = 6;
-    Support support = 7;
-    ODHIntegration integration= 8;
-    string example = 9;    
+  string name = 1;
+  bool opensource = 2;
+  string csvName = 3;
+  string version = 4;
+  bool installed = 5;
+  bool marketplaceImage = 6;
+  Support support = 7;
+  ODHIntegration integration = 8;
+  string example = 9;
 }
 
 message Support {
-    bool isv =1;
-    bool redhat =2;
+  bool isv = 1;
+  bool redhat = 2;
 }
 message ODHIntegration {
-    string install_doc_url =1;
-    string level =2;
+  string install_doc_url = 1;
+  string level = 2;
 }
 
+message GetAppRequest { string category = 1; }
 
-message GetSubscribeRequest {
-    string category = 1;
+message GetAppResponse {
+  string category = 1;
+  repeated Application applications= 2;
 }
 
-message GetSubscribeResponse {
-    Subscribe subscribe = 1;
+message GetAppParamsRequest { string appName = 1; }
+
+message GetAppParamsResponse { repeated string params = 1; }
+
+message GetAppCRRequest {
+  string appName = 1;
+  repeated string params = 2;
 }
+
+message GetAppCRResponse { string cr = 1; }

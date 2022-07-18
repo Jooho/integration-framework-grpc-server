@@ -4,6 +4,8 @@ PROTOC_VER=21.2
 PROTOC_GEN_GO_GRPC=1.2
 PROTOC_GEN_GO=1.28
 
+# Path
+TEMP_DIR=/tmp
 
 .PHONY: lib-clean
 lib-clean:
@@ -31,10 +33,7 @@ setup: lib-clean lib-install
 
 .PHONY: gen-v1-protos
 gen-v1-proto:
-	find ./proto/v1 -name "*.proto" | xargs -I % sh -c 'protoc --proto_path=. --proto_path=proto/protoc3 --proto_path=./vendor  --go_out /tmp --go_opt paths=source_relative --go-grpc_out /tmp --go-grpc_opt paths=source_relative %'
-
-	cp -R /tmp/proto/v1/*.go ./pkg/api/v1/
-		
+	hacks/scripts/generate_proto.sh v1 ${TEMP_DIR}
 	go mod tidy
 	go mod vendor
 	 

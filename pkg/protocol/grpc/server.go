@@ -8,7 +8,8 @@ import (
 
 	"github.com/Jooho/integration-framework-server/pkg/logger"
 	"github.com/Jooho/integration-framework-server/pkg/protocol/grpc/middleware"
-	userapi "github.com/Jooho/integration-framework-server/pkg/apis/user"
+	serviceapi "github.com/Jooho/integration-framework-server/pkg/service/v1"
+	
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
 )
@@ -29,9 +30,12 @@ func RunServer(ctx context.Context, port string) error {
 	// register service
 	server := grpc.NewServer(opts...)
 	
+	serviceapi.NewUserServer(*server)
+	serviceapi.NewModelServingServer(*server)
+	
 	reflection.Register(server)
-	userapi.NewUserServer(*server)
 
+	
 	// graceful shutdown
 	c := make(chan os.Signal, 1)
 	signal.Notify(c, os.Interrupt)

@@ -1,12 +1,12 @@
 // protos/v1/user/user.proto
 syntax = "proto3";
 
-package v1;
+package api;
 
 import "google/protobuf/timestamp.proto";
 import "google/protobuf/any.proto";
 
-option go_package = "github.com/Jooho/integration-framework-server/pkg/api/v1";
+option go_package = ".;user";
 
 service User {
   rpc GetUser(GetUserRequest) returns (GetUserResponse);

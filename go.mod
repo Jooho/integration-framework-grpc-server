@@ -38,5 +38,6 @@ require (
 	sigs.k8s.io/structured-merge-diff/v4 v4.2.1 // indirect
 	sigs.k8s.io/yaml v1.2.0 // indirect
 )
+
 //zap - "transport is closing" issue, so at this moment, I am using master branch
 //https://github.com/grpc-ecosystem/go-grpc-middleware/pull/452
