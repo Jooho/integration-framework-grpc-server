@@ -7,6 +7,7 @@ import (
 
 	"github.com/Jooho/integration-framework-server/pkg/logger"
 	"github.com/Jooho/integration-framework-server/pkg/protocol/grpc"
+	"github.com/Jooho/integration-framework-server/pkg/utils"
 )
 
 // Config is configuration for Server
@@ -20,6 +21,9 @@ type Config struct {
 	LogLevel int
 	// LogTimeFormat is print time format for logger e.g. 2006-01-02T15:04:05Z07:00
 	LogTimeFormat string
+
+	//kuberentes config
+	Mode string
 }
 
 func RunServer() error {
@@ -27,6 +31,7 @@ func RunServer() error {
 
 	// get configuration
 	var cfg Config
+	flag.StringVar(&cfg.Mode, "mode", "cluster", "kubernetes config path: cluster, local")
 	flag.StringVar(&cfg.GRPCPort, "grpc-port", "9000", "gRPC port to bind")
 	flag.IntVar(&cfg.LogLevel, "log-level", 0, "Global log level")
 	flag.StringVar(&cfg.LogTimeFormat, "log-time-format", "",
@@ -42,6 +47,12 @@ func RunServer() error {
 		return fmt.Errorf("failed to initialize logger: %v", err)
 	}
 
-	return grpc.RunServer(ctx, cfg.GRPCPort)
+	// get k8s clientset	
+	clientset, err := utils.GetK8SClientSet(cfg.Mode);
+	if err != nil{
+		return fmt.Errorf("failed to initialize a connection to kuberenetes: %v",err)
+	}
+
+	return grpc.RunServer(ctx, cfg.GRPCPort, clientset)
 
 }

@@ -44,4 +44,4 @@ clean-v1-proto:
 
 .PHONY: run
 run:
-	go run ./cmd/server/main.go
+	go run ./cmd/server/main.go --mode=$(MODE)

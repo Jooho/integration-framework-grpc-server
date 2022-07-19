@@ -8,14 +8,18 @@ import (
 
 	"github.com/Jooho/integration-framework-server/pkg/logger"
 	"github.com/Jooho/integration-framework-server/pkg/protocol/grpc/middleware"
-	serviceapi "github.com/Jooho/integration-framework-server/pkg/service/v1"
-	
+	"k8s.io/client-go/kubernetes"
+
+	storageservice "github.com/Jooho/integration-framework-server/pkg/service/storage"
+	userservice "github.com/Jooho/integration-framework-server/pkg/service/user"
+	modelservingservice "github.com/Jooho/integration-framework-server/pkg/service/v1/modelserving"
+
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
 )
 
 // RunServer runs gRPC service to publish ToDo service
-func RunServer(ctx context.Context, port string) error {
+func RunServer(ctx context.Context, port string, clientset *kubernetes.Clientset) error {
 	listen, err := net.Listen("tcp", ":"+port)
 	if err != nil {
 		return err
@@ -30,10 +34,11 @@ func RunServer(ctx context.Context, port string) error {
 	// register service
 	server := grpc.NewServer(opts...)
 	
-	serviceapi.NewUserServer(*server)
-	serviceapi.NewModelServingServer(*server)
-	
 	reflection.Register(server)
+		
+	userservice.NewUserServer(*server, clientset)
+	modelservingservice.NewModelServingServer(*server)
+	storageservice.NewStorageServer(*server, clientset)
 
 	
 	// graceful shutdown

@@ -1,0 +1,16 @@
+syntax = "proto3";
+
+package api;
+
+option go_package = ".;storage";
+
+service Storage {
+//   rpc createStorage(CreateStorageRequest) returns (CreateStorageResponse);
+  rpc GetStorageParams(GetStorageParamsRequest)
+      returns (GetStorageParamResponse);
+}
+
+// message GetStorageParamsRequest { string storageType = 1; }
+message GetStorageParamsRequest {}
+
+message GetStorageParamResponse { repeated string params = 1; }
