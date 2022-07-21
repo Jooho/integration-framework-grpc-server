@@ -9,7 +9,6 @@ import (
 	"github.com/Jooho/integration-framework-server/pkg/logger"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/client-go/kubernetes"
-	"k8s.io/client-go/kubernetes/scheme"
 	"k8s.io/client-go/rest"
 	"k8s.io/client-go/tools/clientcmd"
 )
@@ -20,8 +19,8 @@ var (
 	err       error
 )
 
-func GetK8SClientSet(mode string) (*kubernetes.Clientset, error) {
-	logger.Log.Debug("Entry kubernetes.go - GetK8SClientSet")
+func GetK8SRestConfig(mode string) (*rest.Config, error) {
+	logger.Log.Debug("Entry kubernetes.go - GetK8SRestConfig")
 
 	if strings.ToLower(mode) == "local" {
 		kubeconfig := filepath.Join(
@@ -30,27 +29,34 @@ func GetK8SClientSet(mode string) (*kubernetes.Clientset, error) {
 		config, err = clientcmd.BuildConfigFromFlags("", kubeconfig)
 		if err != nil {
 			logger.Log.Fatal(err.Error())
-			return &kubernetes.Clientset{},  err
+			return &rest.Config{}, err
 		}
 
 	} else {
 		config, err = rest.InClusterConfig()
 		if err != nil {
 			logger.Log.Fatal(err.Error())
-			return &kubernetes.Clientset{}, err
+			return &rest.Config{}, err
 		}
 	}
+	return config, nil
+}
+func GetK8SClientSet(mode string) (*kubernetes.Clientset, error) {
+	logger.Log.Debug("Entry kubernetes.go - GetK8SClientSet")
+
+	GetK8SRestConfig(mode)
 
 	clientset, err = kubernetes.NewForConfig(config)
 	if err != nil {
 		logger.Log.Fatal(err.Error())
 		return &kubernetes.Clientset{}, err
 	}
+	
 	return clientset, nil
 }
 
-func ConvertK8StoJsonString(obj runtime.Object, yamlType bool, pretty bool) string {
-	gvks, _, err := scheme.Scheme.ObjectKinds(obj)
+func ConvertK8StoJsonString(scheme *runtime.Scheme, obj runtime.Object, yamlType bool, pretty bool) string {
+	gvks, _, err := scheme.ObjectKinds(obj)
 	if err != nil {
 		logger.Log.Error(err.Error())
 	}

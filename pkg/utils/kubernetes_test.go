@@ -4,6 +4,7 @@ import (
 	"strings"
 	"testing"
 
+	"github.com/openshift/client-go/template/clientset/versioned/scheme"
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
@@ -26,7 +27,7 @@ func TestConvertK8StoJsonString(t *testing.T) {
 	//when - ConvertK8StoJsonString "K8S to JSON"
 	testname := "Test converting K8S object configmap to JSON string"
 	t.Run(testname, func(t *testing.T) {
-		jsonString := ConvertK8StoJsonString(k8sObjConfigMap, false, false)
+		jsonString := ConvertK8StoJsonString(scheme.Scheme, k8sObjConfigMap, false, false)
 
 		//then - jsonString must be the same as expectedJsonString
 		if result, _ := AreEqualJSON(jsonString, expectedJsonString); !result {

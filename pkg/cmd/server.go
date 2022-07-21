@@ -5,10 +5,21 @@ import (
 	"flag"
 	"fmt"
 
+	"github.com/Jooho/integration-framework-server/pkg/helpers/legacy"
 	"github.com/Jooho/integration-framework-server/pkg/logger"
 	"github.com/Jooho/integration-framework-server/pkg/protocol/grpc"
 	"github.com/Jooho/integration-framework-server/pkg/utils"
+	templatev1 "github.com/openshift/api/template/v1"
+	apiruntime "k8s.io/apimachinery/pkg/runtime"
+	utilruntime "k8s.io/apimachinery/pkg/util/runtime"
 )
+
+var (
+	scheme   = apiruntime.NewScheme()
+)
+
+func init() {
+}
 
 // Config is configuration for Server
 type Config struct {
@@ -39,20 +50,38 @@ func RunServer() error {
 	flag.Parse()
 
 	if len(cfg.GRPCPort) == 0 {
-		return fmt.Errorf("invalid TCP port for gRPC server: '%s'", cfg.GRPCPort)
+		custom_error := fmt.Errorf("invalid TCP port for gRPC server: '%s'", cfg.GRPCPort)
+		logger.Log.Error(custom_error.Error())
+		return custom_error
 	}
 
 	// initialize logger
 	if err := logger.Init(cfg.LogLevel, cfg.LogTimeFormat); err != nil {
-		return fmt.Errorf("failed to initialize logger: %v", err)
+		custom_error := fmt.Errorf("failed to initialize logger: %v", err)
+		logger.Log.Error(custom_error.Error())
+		return custom_error
+	}
+	
+	// get k8s clientset
+	clientset, err := utils.GetK8SClientSet(cfg.Mode)
+	if err != nil {
+		custom_error := fmt.Errorf("failed to initialize a connection to kuberenetes: %v", err)
+		logger.Log.Error(custom_error.Error())
+		return custom_error
 	}
 
-	// get k8s clientset	
-	clientset, err := utils.GetK8SClientSet(cfg.Mode);
-	if err != nil{
-		return fmt.Errorf("failed to initialize a connection to kuberenetes: %v",err)
+	// get k8s restconfig
+	restconfig, err := utils.GetK8SRestConfig(cfg.Mode)
+	if err != nil {
+		custom_error := fmt.Errorf("failed to initialize a connection to kuberenetes: %v", err)
+		logger.Log.Error(custom_error.Error())
+		return custom_error
 	}
 
-	return grpc.RunServer(ctx, cfg.GRPCPort, clientset)
+	//Add 3rd API Scheme
+	utilruntime.Must(templatev1.Install(scheme))
+	legacy.InstallExternalLegacyTemplate(scheme)
+
+	return grpc.RunServer(ctx, cfg.GRPCPort, scheme, clientset, restconfig)
 
 }

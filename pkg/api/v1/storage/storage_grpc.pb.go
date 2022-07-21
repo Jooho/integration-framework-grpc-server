@@ -22,8 +22,8 @@ const _ = grpc.SupportPackageIsVersion7
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type StorageClient interface {
-	//   rpc createStorage(CreateStorageRequest) returns (CreateStorageResponse);
 	GetStorageParams(ctx context.Context, in *GetStorageParamsRequest, opts ...grpc.CallOption) (*GetStorageParamResponse, error)
+	GetRenderedStorageManifest(ctx context.Context, in *CreateStorageRequest, opts ...grpc.CallOption) (*CreateStorageResponse, error)
 }
 
 type storageClient struct {
@@ -43,12 +43,21 @@ func (c *storageClient) GetStorageParams(ctx context.Context, in *GetStoragePara
 	return out, nil
 }
 
+func (c *storageClient) GetRenderedStorageManifest(ctx context.Context, in *CreateStorageRequest, opts ...grpc.CallOption) (*CreateStorageResponse, error) {
+	out := new(CreateStorageResponse)
+	err := c.cc.Invoke(ctx, "/api.Storage/GetRenderedStorageManifest", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // StorageServer is the server API for Storage service.
 // All implementations must embed UnimplementedStorageServer
 // for forward compatibility
 type StorageServer interface {
-	//   rpc createStorage(CreateStorageRequest) returns (CreateStorageResponse);
 	GetStorageParams(context.Context, *GetStorageParamsRequest) (*GetStorageParamResponse, error)
+	GetRenderedStorageManifest(context.Context, *CreateStorageRequest) (*CreateStorageResponse, error)
 	mustEmbedUnimplementedStorageServer()
 }
 
@@ -58,6 +67,9 @@ type UnimplementedStorageServer struct {
 
 func (UnimplementedStorageServer) GetStorageParams(context.Context, *GetStorageParamsRequest) (*GetStorageParamResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetStorageParams not implemented")
+}
+func (UnimplementedStorageServer) GetRenderedStorageManifest(context.Context, *CreateStorageRequest) (*CreateStorageResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetRenderedStorageManifest not implemented")
 }
 func (UnimplementedStorageServer) mustEmbedUnimplementedStorageServer() {}
 
@@ -90,6 +102,24 @@ func _Storage_GetStorageParams_Handler(srv interface{}, ctx context.Context, dec
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Storage_GetRenderedStorageManifest_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CreateStorageRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(StorageServer).GetRenderedStorageManifest(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/api.Storage/GetRenderedStorageManifest",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(StorageServer).GetRenderedStorageManifest(ctx, req.(*CreateStorageRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // Storage_ServiceDesc is the grpc.ServiceDesc for Storage service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -100,6 +130,10 @@ var Storage_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetStorageParams",
 			Handler:    _Storage_GetStorageParams_Handler,
+		},
+		{
+			MethodName: "GetRenderedStorageManifest",
+			Handler:    _Storage_GetRenderedStorageManifest_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
