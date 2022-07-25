@@ -39,3 +39,5 @@ do
   mkdir -p ${dest_dir}/${version}/${dir_name}
   cp ${pb_dir}/${version}/${file_name} ${dest_dir}/${version}/${dir_name}
 done
+
+rm -rf ${pb_dir}

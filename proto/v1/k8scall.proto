@@ -1,0 +1,20 @@
+syntax = "proto3";
+
+package api;
+
+option go_package = ".;k8scall";
+
+service K8SCall {
+  rpc CreateObjectByStringJson(K8SStringJson) returns (CreateObjectByFileResponse);
+}
+
+message K8SStringJson {
+  string fileString = 1;
+  string namespace = 2;
+}
+
+message CreateObjectByFileResponse {
+
+  bool ok = 1;
+  string description = 2;
+}

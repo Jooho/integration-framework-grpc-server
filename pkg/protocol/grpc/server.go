@@ -12,6 +12,7 @@ import (
 	"k8s.io/client-go/kubernetes"
 	"k8s.io/client-go/rest"
 
+	k8scallservice "github.com/Jooho/integration-framework-server/pkg/service/k8scall"
 	modelservingservice "github.com/Jooho/integration-framework-server/pkg/service/modelserving"
 	storageservice "github.com/Jooho/integration-framework-server/pkg/service/storage"
 	userservice "github.com/Jooho/integration-framework-server/pkg/service/user"
@@ -41,6 +42,7 @@ func RunServer(ctx context.Context, port string, scheme *runtime.Scheme, clients
 	userservice.NewUserServer(*server, clientset)
 	modelservingservice.NewModelServingServer(*server)
 	storageservice.NewStorageServer(*server, scheme, clientset, config)
+	k8scallservice.NewK8sCallServer(*server, scheme, clientset, config)
 	
 	// graceful shutdown
 	c := make(chan os.Signal, 1)

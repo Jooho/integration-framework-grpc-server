@@ -1,4 +1,4 @@
-package v1
+package modelserving
 
 import (
 	"context"
@@ -27,9 +27,13 @@ func (s *modelServingServer) ListApp(ctx context.Context, req *v1ms.GetAppReques
 }
 
 func (s *modelServingServer) GetAppParams(ctx context.Context, req *v1ms.GetAppParamsRequest) (*v1ms.GetAppParamsResponse, error) {
+	logger.Log.Debug("Entry modelserving.go - GetAppParams")
+
 	return &v1ms.GetAppParamsResponse{}, nil
 }
 
 func (s *modelServingServer) GetAppCustomResource(ctx context.Context, req *v1ms.GetAppCRRequest) (*v1ms.GetAppCRResponse, error) {
+	logger.Log.Debug("Entry modelserving.go - GetAppCustomResource")
+
 	return &v1ms.GetAppCRResponse{}, nil
 }

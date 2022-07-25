@@ -7,27 +7,21 @@ import (
 
 	"github.com/Jooho/integration-framework-server/pkg/logger"
 	"github.com/Jooho/integration-framework-server/pkg/utils"
-	
+
 	v1storage "github.com/Jooho/integration-framework-server/pkg/api/v1/storage"
 	templatev1 "github.com/openshift/api/template/v1"
 	templatev1client "github.com/openshift/client-go/template/clientset/versioned/typed/template/v1"
 	"github.com/openshift/library-go/pkg/template/templateprocessing"
 
-	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	kerrors "k8s.io/apimachinery/pkg/util/errors"
+	"google.golang.org/grpc"
 	"k8s.io/apimachinery/pkg/api/errors"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/conversion"
 	"k8s.io/apimachinery/pkg/runtime"
-	"google.golang.org/grpc"
+	kerrors "k8s.io/apimachinery/pkg/util/errors"
 	"k8s.io/client-go/kubernetes"
 	"k8s.io/client-go/rest"
-	"k8s.io/cli-runtime/pkg/genericclioptions"
 )
-
-type processPrinter struct {
-	printFlags   *genericclioptions.PrintFlags
-	outputFormat string
-}
 
 type storageServer struct {
 	Scheme *runtime.Scheme
@@ -94,7 +88,7 @@ func (s *storageServer) GetRenderedStorageManifest(ctx context.Context, req *v1s
 		return &v1storage.CreateStorageResponse{}, err
 	}
 
-	if errs := injectUserVars(templateParams, storageTemplateObj, true); errs != nil {
+	if errs := injectUserVars(templateParams, storageTemplateObj, false); errs != nil {
 		return &v1storage.CreateStorageResponse{}, kerrors.NewAggregate(errs)
 	}
 	resultObj := storageTemplateObj
@@ -104,7 +98,7 @@ func (s *storageServer) GetRenderedStorageManifest(ctx context.Context, req *v1s
 	}
 
 	runtime.Convert_runtime_RawExtension_To_runtime_Object(&resultObj.Objects[0], &obj, scope)
-	jsonString := utils.ConvertK8StoJsonString(s.Scheme, obj, false, true)
+	jsonString := utils.ConvertK8StoJsonString(s.Scheme, obj, false, false)
 
 	return &v1storage.CreateStorageResponse{Manifest: jsonString}, nil
 }
