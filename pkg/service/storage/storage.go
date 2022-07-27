@@ -24,8 +24,8 @@ import (
 )
 
 type storageServer struct {
-	Scheme *runtime.Scheme
 	v1storage.StorageServer
+	Scheme *runtime.Scheme
 	clientset      *kubernetes.Clientset
 	templateClient *templatev1client.TemplateV1Client
 	config         *rest.Config

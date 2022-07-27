@@ -1,0 +1,30 @@
+---
+- category: modelserving
+  applications:
+  - name: openvino
+  	template: modelserving-ovms-template
+    provider: Intel
+    csvName: openvino-operator
+    minSupportedVersion: 0.2.0
+    installed: true
+    support:
+      isv: true
+      redhat: true
+    integration:
+      installation_doc_url: explore?selectId=openvino
+      installation_level: 2    
+  - name: seldon
+    provider: Seldon Technologies
+    opensource: true
+    csvName: seldon-operator
+    bundleName: seldon-operator-certified
+    minSupportedVersion: 1.13.1
+    installed: false
+    marketplaceImage: true
+    support:
+      isv: true
+      redhat: true
+    integration:
+      installation_doc_url: explore?selectId=seldon
+      installation_level: 2
+  

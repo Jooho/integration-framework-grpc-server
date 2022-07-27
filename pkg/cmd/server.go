@@ -12,6 +12,8 @@ import (
 	templatev1 "github.com/openshift/api/template/v1"
 	apiruntime "k8s.io/apimachinery/pkg/runtime"
 	utilruntime "k8s.io/apimachinery/pkg/util/runtime"
+	odhintegrationv1alpha1 "github.com/Jooho/integration-framework-server/pkg/api/v1alpha1/odhintegration"
+	operatorv1alpha1 "github.com/operator-framework/api/pkg/operators/v1alpha1"
 )
 
 var (
@@ -80,8 +82,11 @@ func RunServer() error {
 
 	//Add 3rd API Scheme
 	utilruntime.Must(templatev1.Install(scheme))
-	legacy.InstallExternalLegacyTemplate(scheme)
+	utilruntime.Must(odhintegrationv1alpha1.Install(scheme))
+	utilruntime.Must(operatorv1alpha1.AddToScheme(scheme))
 
+	legacy.InstallExternalLegacyTemplate(scheme)
+	
 	return grpc.RunServer(ctx, cfg.GRPCPort, scheme, clientset, restconfig)
 
 }

@@ -22,11 +22,6 @@ import (
 	v1k8scall "github.com/Jooho/integration-framework-server/pkg/api/v1/k8scall"
 	"github.com/Jooho/integration-framework-server/pkg/logger"
 )
-
-type k8sFile struct {
-	fileString string
-	namespace  string
-}
 type k8sCallServer struct {
 	Scheme *runtime.Scheme
 	v1k8scall.K8SCallServer

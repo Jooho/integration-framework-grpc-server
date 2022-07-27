@@ -12,30 +12,31 @@ service ModelServing {
 
 message Application {
   string name = 1;
-  bool opensource = 2;
+  string provider =2;
   string csvName = 3;
-  string version = 4;
+  string minSupportedVersion = 4;
   bool installed = 5;
-  bool marketplaceImage = 6;
-  Support support = 7;
-  ODHIntegration integration = 8;
-  string example = 9;
+  string template= 6;
+  // Support support = 7;
+  // Integration integration = 8;
 }
 
 message Support {
   bool isv = 1;
   bool redhat = 2;
 }
-message ODHIntegration {
+message Integration {
   string install_doc_url = 1;
   string level = 2;
 }
 
-message GetAppRequest { string category = 1; }
+message GetAppRequest {
+  string namespace = 1;
+  optional string appName = 2;
+}
 
 message GetAppResponse {
-  string category = 1;
-  repeated Application applications= 2;
+  repeated Application applications = 1;
 }
 
 message GetAppParamsRequest { string appName = 1; }
@@ -44,7 +45,7 @@ message GetAppParamsResponse { repeated string params = 1; }
 
 message GetAppCRRequest {
   string appName = 1;
-  repeated string params = 2;
+  map<string, string> parameters = 2;
 }
 
 message GetAppCRResponse { string cr = 1; }

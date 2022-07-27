@@ -36,14 +36,14 @@ func RunServer(ctx context.Context, port string, scheme *runtime.Scheme, clients
 
 	// register service
 	server := grpc.NewServer(opts...)
-	
+
 	reflection.Register(server)
-		
+
 	userservice.NewUserServer(*server, clientset)
-	modelservingservice.NewModelServingServer(*server)
+	modelservingservice.NewModelServingServer(*server, scheme, clientset, config)
 	storageservice.NewStorageServer(*server, scheme, clientset, config)
 	k8scallservice.NewK8sCallServer(*server, scheme, clientset, config)
-	
+
 	// graceful shutdown
 	c := make(chan os.Signal, 1)
 	signal.Notify(c, os.Interrupt)
@@ -59,6 +59,6 @@ func RunServer(ctx context.Context, port string, scheme *runtime.Scheme, clients
 	}()
 
 	// start gRPC server
-	logger.Log.Info("starting gRPC server...Port: "+port)
+	logger.Log.Info("starting gRPC server...Port: " + port)
 	return server.Serve(listen)
 }
