@@ -7,16 +7,16 @@ option go_package = ".;modelserving";
 service ModelServing {
   rpc ListApp(GetAppRequest) returns (GetAppResponse);
   rpc GetAppParams(GetAppParamsRequest) returns (GetAppParamsResponse);
-  rpc GetAppCustomResource(GetAppCRRequest) returns (GetAppCRResponse);
+  rpc GetAppCustomResource(GetRenderedCRRequest) returns (GetRenderedCRResponse);
 }
 
 message Application {
   string name = 1;
-  string provider =2;
+  string provider = 2;
   string csvName = 3;
   string minSupportedVersion = 4;
   bool installed = 5;
-  string template= 6;
+  string template = 6;
   // Support support = 7;
   // Integration integration = 8;
 }
@@ -35,17 +35,32 @@ message GetAppRequest {
   optional string appName = 2;
 }
 
-message GetAppResponse {
-  repeated Application applications = 1;
-}
+message GetAppResponse { repeated Application applications = 1; }
 
-message GetAppParamsRequest { string appName = 1; }
-
-message GetAppParamsResponse { repeated string params = 1; }
-
-message GetAppCRRequest {
+message GetAppParamsRequest {
   string appName = 1;
-  map<string, string> parameters = 2;
+  string storageType = 2;
+  string storageName = 3;
+  string storageNamespace = 4;
 }
 
-message GetAppCRResponse { string cr = 1; }
+message GetAppParamsResponse {
+  string appName = 1;
+  string storageType = 2;
+  string storageName = 3;
+  string storageNamespace = 4;
+  string parameters = 5;
+}
+
+message GetRenderedCRRequest {
+  string appName = 1;
+  string storageType = 2;
+  string storageName = 3;
+  string storageNamespace = 4;
+
+  map<string, string> parameters = 5;
+}
+
+message GetRenderedCRResponse {
+  string manifest = 1;
+}

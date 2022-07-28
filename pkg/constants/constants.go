@@ -1,3 +1,3 @@
-package global
+package constants
 
 const TEMPLATE_NAMESPACE = "if-templates"

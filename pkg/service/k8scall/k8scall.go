@@ -105,7 +105,7 @@ func (k *k8sCallServer) CreateObjectByStringJson(ctx context.Context, req *v1k8s
 
 	createdObject, err := dr.Create(context.Background(), unstructedObj, metav1.CreateOptions{})
 	if err != nil {
-		logger.Log.Error(fmt.Sprintf("Error creating a resource(Job): %v", err))
+		logger.Log.Error(fmt.Sprintf("Error creating a resource(%s): %v",createdObject.GroupVersionKind().Kind, err))
 		return &v1k8scall.CreateObjectByFileResponse{
 			Ok:          false,
 			Description: "Internal Server Error",
@@ -113,7 +113,7 @@ func (k *k8sCallServer) CreateObjectByStringJson(ctx context.Context, req *v1k8s
 	}
 
 	return &v1k8scall.CreateObjectByFileResponse{
-		Ok:          false,
+		Ok:          true,
 		Description: fmt.Sprintf("Object %s successfully created in %s namespace", createdObject.GetKind(), createdObject.GetNamespace()),
 	}, nil
 

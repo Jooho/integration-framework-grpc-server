@@ -6,6 +6,7 @@ import (
 	"log"
 	"reflect"
 
+	"github.com/Jooho/integration-framework-server/pkg/logger"
 	"google.golang.org/protobuf/encoding/protojson"
 	"google.golang.org/protobuf/proto"
 	"k8s.io/apimachinery/pkg/runtime"
@@ -22,7 +23,7 @@ func ProtobufToJson(pb proto.Message) string {
 	}
 	j, err := marshaler.Marshal(pb)
 	if err != nil {
-		log.Println("Can't convert Protobuf to JSON", err)
+		logger.Log.Error(fmt.Sprintf("Can't convert Protobuf to JSON: %s", err))
 	}
 	// the return []byte type to string
 	return string(j)

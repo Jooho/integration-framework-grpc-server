@@ -2,7 +2,7 @@
 - category: modelserving
   applications:
   - name: openvino
-  	template: modelserving-ovms-template
+  	template: ovms-template
     provider: Intel
     csvName: openvino-operator
     minSupportedVersion: 0.2.0

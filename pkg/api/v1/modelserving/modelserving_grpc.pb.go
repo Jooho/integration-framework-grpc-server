@@ -24,7 +24,7 @@ const _ = grpc.SupportPackageIsVersion7
 type ModelServingClient interface {
 	ListApp(ctx context.Context, in *GetAppRequest, opts ...grpc.CallOption) (*GetAppResponse, error)
 	GetAppParams(ctx context.Context, in *GetAppParamsRequest, opts ...grpc.CallOption) (*GetAppParamsResponse, error)
-	GetAppCustomResource(ctx context.Context, in *GetAppCRRequest, opts ...grpc.CallOption) (*GetAppCRResponse, error)
+	GetAppCustomResource(ctx context.Context, in *GetRenderedCRRequest, opts ...grpc.CallOption) (*GetRenderedCRResponse, error)
 }
 
 type modelServingClient struct {
@@ -53,8 +53,8 @@ func (c *modelServingClient) GetAppParams(ctx context.Context, in *GetAppParamsR
 	return out, nil
 }
 
-func (c *modelServingClient) GetAppCustomResource(ctx context.Context, in *GetAppCRRequest, opts ...grpc.CallOption) (*GetAppCRResponse, error) {
-	out := new(GetAppCRResponse)
+func (c *modelServingClient) GetAppCustomResource(ctx context.Context, in *GetRenderedCRRequest, opts ...grpc.CallOption) (*GetRenderedCRResponse, error) {
+	out := new(GetRenderedCRResponse)
 	err := c.cc.Invoke(ctx, "/api.ModelServing/GetAppCustomResource", in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -68,7 +68,7 @@ func (c *modelServingClient) GetAppCustomResource(ctx context.Context, in *GetAp
 type ModelServingServer interface {
 	ListApp(context.Context, *GetAppRequest) (*GetAppResponse, error)
 	GetAppParams(context.Context, *GetAppParamsRequest) (*GetAppParamsResponse, error)
-	GetAppCustomResource(context.Context, *GetAppCRRequest) (*GetAppCRResponse, error)
+	GetAppCustomResource(context.Context, *GetRenderedCRRequest) (*GetRenderedCRResponse, error)
 	mustEmbedUnimplementedModelServingServer()
 }
 
@@ -82,7 +82,7 @@ func (UnimplementedModelServingServer) ListApp(context.Context, *GetAppRequest) 
 func (UnimplementedModelServingServer) GetAppParams(context.Context, *GetAppParamsRequest) (*GetAppParamsResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetAppParams not implemented")
 }
-func (UnimplementedModelServingServer) GetAppCustomResource(context.Context, *GetAppCRRequest) (*GetAppCRResponse, error) {
+func (UnimplementedModelServingServer) GetAppCustomResource(context.Context, *GetRenderedCRRequest) (*GetRenderedCRResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetAppCustomResource not implemented")
 }
 func (UnimplementedModelServingServer) mustEmbedUnimplementedModelServingServer() {}
@@ -135,7 +135,7 @@ func _ModelServing_GetAppParams_Handler(srv interface{}, ctx context.Context, de
 }
 
 func _ModelServing_GetAppCustomResource_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetAppCRRequest)
+	in := new(GetRenderedCRRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -147,7 +147,7 @@ func _ModelServing_GetAppCustomResource_Handler(srv interface{}, ctx context.Con
 		FullMethod: "/api.ModelServing/GetAppCustomResource",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ModelServingServer).GetAppCustomResource(ctx, req.(*GetAppCRRequest))
+		return srv.(ModelServingServer).GetAppCustomResource(ctx, req.(*GetRenderedCRRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }

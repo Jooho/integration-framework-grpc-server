@@ -9,23 +9,22 @@ import (
 	"github.com/Jooho/integration-framework-server/pkg/utils"
 
 	v1storage "github.com/Jooho/integration-framework-server/pkg/api/v1/storage"
-	templatev1 "github.com/openshift/api/template/v1"
+	constants "github.com/Jooho/integration-framework-server/pkg/constants"
 	templatev1client "github.com/openshift/client-go/template/clientset/versioned/typed/template/v1"
-	"github.com/openshift/library-go/pkg/template/templateprocessing"
+	templatev1 "github.com/openshift/api/template/v1"
 
 	"google.golang.org/grpc"
 	"k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/conversion"
 	"k8s.io/apimachinery/pkg/runtime"
-	kerrors "k8s.io/apimachinery/pkg/util/errors"
 	"k8s.io/client-go/kubernetes"
 	"k8s.io/client-go/rest"
 )
 
 type storageServer struct {
 	v1storage.StorageServer
-	Scheme *runtime.Scheme
+	Scheme         *runtime.Scheme
 	clientset      *kubernetes.Clientset
 	templateClient *templatev1client.TemplateV1Client
 	config         *rest.Config
@@ -52,12 +51,12 @@ func NewStorageServer(s grpc.Server, scheme *runtime.Scheme, c *kubernetes.Clien
 func (s *storageServer) GetStorageParams(ctx context.Context, req *v1storage.GetStorageParamsRequest) (*v1storage.GetStorageParamResponse, error) {
 	logger.Log.Debug("Entry storage.go - GetApplications")
 
-	template, err := s.templateClient.Templates("if-templates").Get(context.Background(), "storage-"+req.StorageType, metav1.GetOptions{})
+	template, err := s.templateClient.Templates(constants.TEMPLATE_NAMESPACE).Get(context.Background(), "storage-"+req.StorageType, metav1.GetOptions{})
 	if err != nil {
 		logger.Log.Error(fmt.Sprintf("Fail to get storage-%s teamplate: '%v' ", req.StorageType, err))
 		return &v1storage.GetStorageParamResponse{}, err
 	}
-	// jsonpb.Marshaler
+	
 	parameterBytes, err := json.Marshal(template.Parameters)
 	if err != nil {
 		logger.Log.Error(fmt.Sprintf("json marshal failed: %v", err))
@@ -74,9 +73,8 @@ func (s *storageServer) GetStorageParams(ctx context.Context, req *v1storage.Get
 }
 
 func (s *storageServer) GetRenderedStorageManifest(ctx context.Context, req *v1storage.CreateStorageRequest) (*v1storage.CreateStorageResponse, error) {
-
-	var obj runtime.Object
-	var scope conversion.Scope
+	logger.Log.Debug("Entry storage.go - GetRenderedStorageManifest")
+	
 	stroageTemplateName := "storage-" + req.StorageType
 	templateParams := req.Parameters
 
@@ -88,49 +86,28 @@ func (s *storageServer) GetRenderedStorageManifest(ctx context.Context, req *v1s
 		return &v1storage.CreateStorageResponse{}, err
 	}
 
-	if errs := injectUserVars(templateParams, storageTemplateObj, false); errs != nil {
-		return &v1storage.CreateStorageResponse{}, kerrors.NewAggregate(errs)
-	}
-	resultObj := storageTemplateObj
-
-	if resultObj, err = s.Process(storageTemplateObj); err != nil {
+	jsonString,err := processString(s.Scheme,templateParams,s.templateClient,storageTemplateObj)
+	if err != nil{
 		return &v1storage.CreateStorageResponse{}, err
 	}
-
-	runtime.Convert_runtime_RawExtension_To_runtime_Object(&resultObj.Objects[0], &obj, scope)
-	jsonString := utils.ConvertK8StoJsonString(s.Scheme, obj, false, false)
 
 	return &v1storage.CreateStorageResponse{Manifest: jsonString}, nil
 }
 
-func (s *storageServer) Process(in *templatev1.Template) (*templatev1.Template, error) {
-	template := &templatev1.Template{}
-	err := s.templateClient.RESTClient().Post().
-		Namespace("if-templates").
-		Resource("processedTemplates").
-		Body(in).Do(context.TODO()).Into(template)
-	return template, err
-}
+func processString(scheme *runtime.Scheme, values map[string]string, templateClient *templatev1client.TemplateV1Client, in *templatev1.Template) (string, error) {
+	logger.Log.Debug("Entry storage.go - processString")
 
-func getParameterByName(t *templatev1.Template, name string) *templatev1.Parameter {
-	for i, param := range t.Parameters {
-		if param.Name == name {
-			return &(t.Parameters[i])
-		}
-	}
-	return nil
-}
+	var obj runtime.Object
+	var scope conversion.Scope
 
-func injectUserVars(values map[string]string, t *templatev1.Template, ignoreUnknownParameters bool) []error {
-	var errors []error
-	for param, val := range values {
-		v := templateprocessing.GetParameterByName(t, param)
-		if v != nil {
-			v.Value = val
-			v.Generate = ""
-		} else if !ignoreUnknownParameters {
-			errors = append(errors, fmt.Errorf("unknown parameter name %q\n", param))
-		}
+	logger.Log.Debug(fmt.Sprintf("Template(%s) Parameters : %v", in.Name,values))
+
+	resultObj, err := utils.Process(values, templateClient, in); 
+	if err != nil {
+		return "", err
 	}
-	return errors
+	logger.Log.Debug(fmt.Sprintf("ProcessedTemplate: %v", resultObj))
+	runtime.Convert_runtime_RawExtension_To_runtime_Object(&resultObj.Objects[0], &obj, scope)
+	jsonString := utils.ConvertK8StoJsonString(scheme, obj, false, false)
+	return jsonString, nil
 }
