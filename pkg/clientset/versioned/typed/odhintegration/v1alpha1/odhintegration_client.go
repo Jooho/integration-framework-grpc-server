@@ -3,7 +3,7 @@ package v1alpha1
 import (
 	"net/http"
 
-	odhintegrationv1alpha1 "github.com/Jooho/integration-framework-server/pkg/api/v1alpha1/odhintegration"
+	odhintegrationv1alpha1 "github.com/Jooho/integration-framework-server/pkg/api/odhintegration/v1alpha1"
 
 	"k8s.io/client-go/kubernetes/scheme"
 	rest "k8s.io/client-go/rest"

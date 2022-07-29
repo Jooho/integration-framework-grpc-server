@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"strings"
 
-	msv1 "github.com/Jooho/integration-framework-server/pkg/api/v1/modelserving"
+	msv1 "github.com/Jooho/integration-framework-server/pkg/api/modelserving/v1"
 	odhitgv1alpha1client "github.com/Jooho/integration-framework-server/pkg/clientset/versioned/typed/odhintegration/v1alpha1"
 	constants "github.com/Jooho/integration-framework-server/pkg/constants"
 	"github.com/Jooho/integration-framework-server/pkg/logger"

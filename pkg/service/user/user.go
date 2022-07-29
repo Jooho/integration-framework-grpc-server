@@ -3,7 +3,7 @@ package user
 import (
 	"context"
 
-	v1user "github.com/Jooho/integration-framework-server/pkg/api/v1/user"
+	userv1 "github.com/Jooho/integration-framework-server/pkg/api/user/v1"
 	"github.com/Jooho/integration-framework-server/pkg/logger"
 	"github.com/Jooho/integration-framework-server/test/data"
 	"google.golang.org/grpc"
@@ -12,7 +12,7 @@ import (
 
 
 type userServer struct {
-	v1user.UserServer
+	userv1.UserServer
 	clientset *kubernetes.Clientset
 }
 
@@ -21,14 +21,14 @@ func NewUserServer(s grpc.Server, c *kubernetes.Clientset) {
 	user := &userServer{}
 	user.clientset=c
 	
-	v1user.RegisterUserServer(&s, user)
+	userv1.RegisterUserServer(&s, user)
 }
 
 // GetUser returns user message by user_id
-func (s *userServer) GetUser(ctx context.Context, req *v1user.GetUserRequest) (*v1user.GetUserResponse, error) {
+func (s *userServer) GetUser(ctx context.Context, req *userv1.GetUserRequest) (*userv1.GetUserResponse, error) {
 	userID := req.UserId
 
-	var userMessage *v1user.UserMessage
+	var userMessage *userv1.UserMessage
 	for _, u := range data.UserData {
 		if u.UserId != userID {
 			continue
@@ -37,19 +37,19 @@ func (s *userServer) GetUser(ctx context.Context, req *v1user.GetUserRequest) (*
 		break
 	}
 
-	return &v1user.GetUserResponse{
+	return &userv1.GetUserResponse{
 		UserMessage: userMessage,
 	}, nil
 }
 
 
 // ListUsers returns all user messages
-func (s *userServer) ListUsers(ctx context.Context, req *v1user.ListUsersRequest) (*v1user.ListUsersResponse, error) {
-	userMessages := make([]*v1user.UserMessage, len(data.UserData))	
+func (s *userServer) ListUsers(ctx context.Context, req *userv1.ListUsersRequest) (*userv1.ListUsersResponse, error) {
+	userMessages := make([]*userv1.UserMessage, len(data.UserData))	
 	for i, u := range data.UserData {
 		userMessages[i] = u
 	}
-	return &v1user.ListUsersResponse{
+	return &userv1.ListUsersResponse{
 		UserMessages: userMessages,
 	}, nil
 }

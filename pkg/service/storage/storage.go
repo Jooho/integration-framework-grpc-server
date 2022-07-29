@@ -8,10 +8,10 @@ import (
 	"github.com/Jooho/integration-framework-server/pkg/logger"
 	"github.com/Jooho/integration-framework-server/pkg/utils"
 
-	v1storage "github.com/Jooho/integration-framework-server/pkg/api/v1/storage"
+	v1storage "github.com/Jooho/integration-framework-server/pkg/api/storage/v1"
 	constants "github.com/Jooho/integration-framework-server/pkg/constants"
-	templatev1client "github.com/openshift/client-go/template/clientset/versioned/typed/template/v1"
 	templatev1 "github.com/openshift/api/template/v1"
+	templatev1client "github.com/openshift/client-go/template/clientset/versioned/typed/template/v1"
 
 	"google.golang.org/grpc"
 	"k8s.io/apimachinery/pkg/api/errors"
@@ -67,6 +67,7 @@ func (s *storageServer) GetStorageParams(ctx context.Context, req *v1storage.Get
 		StorageType: req.StorageType,
 		Parameters:  string(parameterBytes),
 	}
+	
 
 	logger.Log.Debug(fmt.Sprintf("getStorageParamResponse: '%s'", getStorageParamResponse))
 	return getStorageParamResponse, nil
@@ -74,11 +75,11 @@ func (s *storageServer) GetStorageParams(ctx context.Context, req *v1storage.Get
 
 func (s *storageServer) GetRenderedStorageManifest(ctx context.Context, req *v1storage.CreateStorageRequest) (*v1storage.CreateStorageResponse, error) {
 	logger.Log.Debug("Entry storage.go - GetRenderedStorageManifest")
-	
+
 	stroageTemplateName := "storage-" + req.StorageType
 	templateParams := req.Parameters
 
-	storageTemplateObj, err := s.templateClient.Templates("if-templates").Get(context.TODO(), stroageTemplateName, metav1.GetOptions{})
+	storageTemplateObj, err := s.templateClient.Templates(constants.TEMPLATE_NAMESPACE).Get(context.TODO(), stroageTemplateName, metav1.GetOptions{})
 	if err != nil {
 		if errors.IsNotFound(err) {
 			return &v1storage.CreateStorageResponse{}, fmt.Errorf("template %q could not be found", stroageTemplateName)

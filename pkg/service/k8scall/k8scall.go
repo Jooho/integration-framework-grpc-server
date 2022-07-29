@@ -7,6 +7,7 @@ import (
 
 	"google.golang.org/grpc"
 
+	"k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/api/meta"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
@@ -19,9 +20,10 @@ import (
 	"k8s.io/client-go/rest"
 	"k8s.io/client-go/restmapper"
 
-	v1k8scall "github.com/Jooho/integration-framework-server/pkg/api/v1/k8scall"
+	v1k8scall "github.com/Jooho/integration-framework-server/pkg/api/k8scall/v1"
 	"github.com/Jooho/integration-framework-server/pkg/logger"
 )
+
 type k8sCallServer struct {
 	Scheme *runtime.Scheme
 	v1k8scall.K8SCallServer
@@ -105,11 +107,15 @@ func (k *k8sCallServer) CreateObjectByStringJson(ctx context.Context, req *v1k8s
 
 	createdObject, err := dr.Create(context.Background(), unstructedObj, metav1.CreateOptions{})
 	if err != nil {
-		logger.Log.Error(fmt.Sprintf("Error creating a resource(%s): %v",createdObject.GroupVersionKind().Kind, err))
-		return &v1k8scall.CreateObjectByFileResponse{
-			Ok:          false,
-			Description: "Internal Server Error",
-		}, err
+		logger.Log.Error(fmt.Sprintf("Error creating a resource: %v", err))
+		if errors.IsAlreadyExists(err) {
+			logger.Log.Error("it exists")
+			return &v1k8scall.CreateObjectByFileResponse{
+				Ok:          false,
+				Description: fmt.Sprintf("The object already exist:(%s)",err.Error()),
+			}, nil
+		}
+
 	}
 
 	return &v1k8scall.CreateObjectByFileResponse{

@@ -3,7 +3,7 @@ package v1alpha1
 import (
 	"context"
 
-	odhintegrationv1alpha1 "github.com/Jooho/integration-framework-server/pkg/api/v1alpha1/odhintegration"
+	odhintegrationv1alpha1 "github.com/Jooho/integration-framework-server/pkg/api/odhintegration/v1alpha1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/client-go/rest"
 )

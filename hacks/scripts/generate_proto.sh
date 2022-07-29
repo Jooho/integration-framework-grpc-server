@@ -28,7 +28,7 @@ find ./proto/v1 -name "*.proto" | xargs -I % sh -c "protoc --proto_path=. --prot
 
 for file in $(find ${pb_dir}/${version} -type f -name "*.go")
 do
-  export file_name=$(echo $file|awk -F/ '{print $NF}')
+  export file_name=$(echo $file|awk -F/ '{print $NF}')  #
   export file_name_without_ext=$(echo $file|awk -F/ '{print $NF}'|cut -d. -f1)
   export dir_name=${file_name_without_ext}
 
@@ -36,8 +36,8 @@ do
   then
     dir_name=$(echo ${file_name_without_ext}|cut -d_ -f1)
   fi
-  mkdir -p ${dest_dir}/${version}/${dir_name}
-  cp ${pb_dir}/${version}/${file_name} ${dest_dir}/${version}/${dir_name}
+  mkdir -p ${dest_dir}/${dir_name}/${version}
+  cp ${pb_dir}/${version}/${file_name} ${dest_dir}/${dir_name}/${version}
 done
 
 rm -rf ${pb_dir}

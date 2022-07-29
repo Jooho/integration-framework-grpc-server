@@ -12,7 +12,7 @@ import (
 	templatev1 "github.com/openshift/api/template/v1"
 	apiruntime "k8s.io/apimachinery/pkg/runtime"
 	utilruntime "k8s.io/apimachinery/pkg/util/runtime"
-	odhintegrationv1alpha1 "github.com/Jooho/integration-framework-server/pkg/api/v1alpha1/odhintegration"
+	odhintegrationv1alpha1 "github.com/Jooho/integration-framework-server/pkg/api/odhintegration/v1alpha1"
 	operatorv1alpha1 "github.com/operator-framework/api/pkg/operators/v1alpha1"
 )
 
@@ -35,8 +35,11 @@ type Config struct {
 	// LogTimeFormat is print time format for logger e.g. 2006-01-02T15:04:05Z07:00
 	LogTimeFormat string
 
-	//kuberentes config
+	//Set running place to get a right kuberentes config
 	Mode string
+
+	//Set running environment to change log 
+	Env string
 }
 
 func RunServer() error {
@@ -45,6 +48,7 @@ func RunServer() error {
 	// get configuration
 	var cfg Config
 	flag.StringVar(&cfg.Mode, "mode", "cluster", "kubernetes config path: cluster, local")
+	flag.StringVar(&cfg.Env, "env", "dev", "environment type: dev, prod")
 	flag.StringVar(&cfg.GRPCPort, "grpc-port", "9000", "gRPC port to bind")
 	flag.IntVar(&cfg.LogLevel, "log-level", 0, "Global log level")
 	flag.StringVar(&cfg.LogTimeFormat, "log-time-format", "",

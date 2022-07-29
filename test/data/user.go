@@ -4,7 +4,7 @@ import (
 	"math/rand"
 	// "time"
 
-	v1user "github.com/Jooho/integration-framework-server/pkg/api/v1/user"
+	v1user "github.com/Jooho/integration-framework-server/pkg/api/user/v1"
 	// "google.golang.org/protobuf/types/known/structpb"
 	"google.golang.org/protobuf/types/known/timestamppb"
 	// v1 "k8s.io/api/core/v1"
