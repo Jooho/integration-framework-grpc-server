@@ -92,7 +92,7 @@ func (s *storageServer) GetRenderedStorageManifest(ctx context.Context, req *v1s
 		return &v1storage.CreateStorageResponse{}, err
 	}
 
-	return &v1storage.CreateStorageResponse{Manifest: jsonString}, nil
+	return &v1storage.CreateStorageResponse{Manifest: []byte(jsonString)}, nil
 }
 
 func processString(scheme *runtime.Scheme, values map[string]string, templateClient *templatev1client.TemplateV1Client, in *templatev1.Template) (string, error) {

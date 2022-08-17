@@ -9,12 +9,11 @@ service K8SCall {
 }
 
 message K8SStringJson {
-  string fileString = 1;
+  string manifest = 1;
   string namespace = 2;
 }
 
 message CreateObjectByFileResponse {
-
   bool ok = 1;
   string description = 2;
 }

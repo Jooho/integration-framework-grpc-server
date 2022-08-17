@@ -30,5 +30,5 @@ message CreateStorageRequest {
 }
 
 message CreateStorageResponse {
-  string manifest = 1;
+  bytes manifest = 1;
 }

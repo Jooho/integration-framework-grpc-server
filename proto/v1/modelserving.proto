@@ -62,5 +62,5 @@ message GetRenderedCRRequest {
 }
 
 message GetRenderedCRResponse {
-  string manifest = 1;
+  bytes manifest = 1;
 }

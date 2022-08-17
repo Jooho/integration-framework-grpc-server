@@ -195,7 +195,7 @@ func (m *modelServingServer) GetAppCustomResource(ctx context.Context, req *msv1
 	if err != nil {
 		return &msv1.GetRenderedCRResponse{}, err
 	}
-	return &msv1.GetRenderedCRResponse{Manifest: jsonString}, nil
+	return &msv1.GetRenderedCRResponse{Manifest: []byte(jsonString)}, nil
 
 }
 func processString(scheme *runtime.Scheme, values map[string]string, templateClient *templatev1client.TemplateV1Client, in *templatev1.Template) (string, error) {

@@ -44,10 +44,10 @@ func NewK8sCallServer(s grpc.Server, scheme *runtime.Scheme, c *kubernetes.Clien
 
 func (k *k8sCallServer) CreateObjectByStringJson(ctx context.Context, req *v1k8scall.K8SStringJson) (*v1k8scall.CreateObjectByFileResponse, error) {
 	logger.Log.Debug("Entry k8scall.go - CreateObjectByStringJson")
-	logger.Log.Debug(fmt.Sprintf("File String: '%s'", req.FileString))
+	logger.Log.Debug(fmt.Sprintf("File String: '%s'", req.Manifest))
 	logger.Log.Debug(fmt.Sprintf("Namespace: '%s'", req.Namespace))
 
-	reqStringJson := strings.ReplaceAll(req.FileString, "\\\"", "")
+	reqStringJson := strings.ReplaceAll(req.Manifest, "\\\"", "")
 	reqByteJson := []byte(reqStringJson)
 
 	logger.Log.Debug(fmt.Sprintf("Json String: '%s'", reqStringJson))
