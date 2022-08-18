@@ -15,10 +15,11 @@ import (
 	operatorv1alpha1 "github.com/operator-framework/api/pkg/operators/v1alpha1"
 	apiruntime "k8s.io/apimachinery/pkg/runtime"
 	utilruntime "k8s.io/apimachinery/pkg/util/runtime"
+	"k8s.io/utils/strings/slices"
 )
 
 var (
-	scheme   = apiruntime.NewScheme()
+	scheme = apiruntime.NewScheme()
 )
 
 func init() {
@@ -34,7 +35,6 @@ type Config struct {
 	// HTTPPort is http port to listen by http server
 	HTTPPort string
 
-
 	// Log parameters section
 	// LogLevel is global log level: Debug(-1), Info(0), Warn(1), Error(2), DPanic(3), Panic(4), Fatal(5)
 	LogLevel int
@@ -42,10 +42,10 @@ type Config struct {
 	LogTimeFormat string
 
 	//Set running place to get a right kuberentes config
-	Mode string
-
-	//Set running environment to change log 
 	Env string
+
+	//Set running environment to change log
+	Mode string
 }
 
 func RunServer() error {
@@ -53,14 +53,27 @@ func RunServer() error {
 
 	// get configuration
 	var cfg Config
-	flag.StringVar(&cfg.Mode, "mode", "cluster", "kubernetes config path: cluster, local")
-	flag.StringVar(&cfg.Env, "env", "dev", "environment type: dev, prod")
+	flag.StringVar(&cfg.Env, "env", "cluster", "kubernetes config path: cluster, local")
+	flag.StringVar(&cfg.Mode, "mode", "dev", "environment type: dev, prod")
 	flag.StringVar(&cfg.GRPCPort, "grpc-port", "9000", "gRPC port to bind")
 	flag.StringVar(&cfg.HTTPPort, "http-port", "8000", "http port to bind")
 	flag.IntVar(&cfg.LogLevel, "log-level", 0, "Global log level")
 	flag.StringVar(&cfg.LogTimeFormat, "log-time-format", "",
 		"Print time format for logger e.g. 2006-01-02T15:04:05Z07:00")
 	flag.Parse()
+
+	// validate parameters
+	envList := []string{"cluster", "local"}
+	modeList := []string{"prod", "dev"}
+
+	if !slices.Contains(envList, cfg.Env) {
+		custom_error := fmt.Errorf("invalid Env value(%s).  it must be one of 'cluster' or 'local'", cfg.Env)
+		return custom_error
+	}
+	if !slices.Contains(modeList, cfg.Mode) {
+		custom_error := fmt.Errorf("invalid Mode value(%s). it must be one of 'prod' or 'dev'", cfg.Mode)
+		return custom_error
+	}
 
 	if len(cfg.GRPCPort) == 0 {
 		custom_error := fmt.Errorf("invalid TCP port for gRPC server: '%s'", cfg.GRPCPort)
@@ -69,14 +82,14 @@ func RunServer() error {
 	}
 
 	// initialize logger
-	if err := logger.Init(cfg.LogLevel, cfg.LogTimeFormat); err != nil {
+	if err := logger.Init(cfg.LogLevel, cfg.LogTimeFormat, cfg.Mode); err != nil {
 		custom_error := fmt.Errorf("failed to initialize logger: %v", err)
 		logger.Log.Error(custom_error.Error())
 		return custom_error
 	}
-	
+
 	// get k8s clientset
-	clientset, err := utils.GetK8SClientSet(cfg.Mode)
+	clientset, err := utils.GetK8SClientSet(cfg.Env)
 	if err != nil {
 		custom_error := fmt.Errorf("failed to initialize a connection to kuberenetes: %v", err)
 		logger.Log.Error(custom_error.Error())
@@ -84,7 +97,7 @@ func RunServer() error {
 	}
 
 	// get k8s restconfig
-	restconfig, err := utils.GetK8SRestConfig(cfg.Mode)
+	restconfig, err := utils.GetK8SRestConfig(cfg.Env)
 	if err != nil {
 		custom_error := fmt.Errorf("failed to initialize a connection to kuberenetes: %v", err)
 		logger.Log.Error(custom_error.Error())
@@ -97,7 +110,7 @@ func RunServer() error {
 	utilruntime.Must(operatorv1alpha1.AddToScheme(scheme))
 
 	legacy.InstallExternalLegacyTemplate(scheme)
-	
+
 	// run HTTP gateway
 	go func() {
 		_ = rest.RunServer(ctx, cfg.GRPCPort, cfg.HTTPPort)

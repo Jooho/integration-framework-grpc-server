@@ -6,7 +6,8 @@ PROTOC_GEN_GO=1.28
 PROTOC_GEN_GATEWAY=2.11.2
 
 # Default Env
-MODE?=local
+ENV?=local
+MODE?=dev
 LOGLEVEL?=0
 # Path
 TEMP_DIR=/tmp
@@ -60,4 +61,4 @@ clean-v1-proto:
 
 .PHONY: run
 run:
-	go run ./cmd/server/main.go --mode=$(MODE) --log-level=$(LOGLEVEL)
+	go run ./cmd/server/main.go --env=$(ENV) --mode=$(MODE) --log-level=$(LOGLEVEL)

@@ -29,7 +29,7 @@ func customTimeEncoder(t time.Time, enc zapcore.PrimitiveArrayEncoder) {
 // Init initializes log by input parameters
 // lvl - global log level: Debug(-1), Info(0), Warn(1), Error(2), DPanic(3), Panic(4), Fatal(5)
 // timeFormat - custom time format for logger of empty string to use default
-func Init(lvl int, timeFormat string) error {
+func Init(lvl int, timeFormat string, mode string) error {
 	var err error
 
 	onceInit.Do(func() {
@@ -51,13 +51,25 @@ func Init(lvl int, timeFormat string) error {
 
 		// Configure console output.
 		var useCustomTimeFormat bool
+		var ecfg zapcore.EncoderConfig
 
-		ecfg := zap.NewProductionEncoderConfig()
-		if len(timeFormat) > 0 {
-			customTimeFormat = timeFormat
-			ecfg.EncodeTime = customTimeEncoder
-			useCustomTimeFormat = true
+		if mode == "prod" {
+			ecfg = zap.NewProductionEncoderConfig()
+
+			if len(timeFormat) > 0 {
+				customTimeFormat = timeFormat
+				ecfg.EncodeTime = customTimeEncoder
+				useCustomTimeFormat = true
+			}
+		} else {
+			ecfg = zap.NewDevelopmentEncoderConfig()
+			ecfg.EncodeCaller = zapcore.FullCallerEncoder
+			ecfg.CallerKey = "caller"
+			ecfg.MessageKey = "message"
+			ecfg.LevelKey = "level"
+			ecfg.TimeKey = "time"
 		}
+
 		consoleEncoder := zapcore.NewJSONEncoder(ecfg)
 
 		// Join the outputs, encoders, and level-handling functions into zapcore.
@@ -67,7 +79,14 @@ func Init(lvl int, timeFormat string) error {
 		)
 
 		// From a zapcore.Core, it's easy to construct a Logger.
-		Log = zap.New(core)
+		if mode == "prod" {
+			Log = zap.New(core)
+			Log.Info("Mode is prod")
+		} else {
+			Log = zap.New(core, zap.AddCaller())
+			Log.Info("Mode is dev")
+		}
+
 		zap.RedirectStdLog(Log)
 
 		if !useCustomTimeFormat {
