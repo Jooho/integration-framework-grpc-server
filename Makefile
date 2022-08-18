@@ -14,7 +14,7 @@ TEMP_DIR=/tmp
 .PHONY: lib-clean
 lib-clean:
 	rm -rf protoc3 /tmp/protoc3 /tmp/pkg
-	rm -f protoc-${PROTOC_VER}-linux-x86_64.zip
+	# rm -f protoc-${PROTOC_VER}-linux-x86_64.zip
 	go clean
 
 .PHONY: lib-install
@@ -22,7 +22,7 @@ lib-install:
 	go install google.golang.org/protobuf/cmd/protoc-gen-go@v${PROTOC_GEN_GO}
 	go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@v${PROTOC_GEN_GO_GRPC}
 	go install github.com/grpc-ecosystem/grpc-gateway/v2/protoc-gen-grpc-gateway@v${PROTOC_GEN_GATEWAY} 
-	 go install github.com/grpc-ecosystem/grpc-gateway/v2/protoc-gen-openapiv2@v${PROTOC_GEN_GATEWAY} 
+	go install github.com/grpc-ecosystem/grpc-gateway/v2/protoc-gen-openapiv2@v${PROTOC_GEN_GATEWAY} 
 
 .PHONY: lib-download
 lib-download:

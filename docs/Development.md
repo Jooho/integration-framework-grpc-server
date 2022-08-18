@@ -1,9 +1,9 @@
 # Development Guide
 
 ## Setup Development Environment
-- clean library
-- donwload grpc gen well know type
-- install grpc related binaries
+- clean library (make lib-clean)
+- download grpc gen well know type/gateway googleapi(make lib-download)
+- install grpc related binaries(make lib-install)
 ~~~
 make setup
 ~~~
@@ -21,3 +21,7 @@ make gen-v1-proto
 # clean pb files
 make clean-v1-proto
 ~~~
+
+
+
+
