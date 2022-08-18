@@ -22,7 +22,7 @@ const _ = grpc.SupportPackageIsVersion7
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type K8SCallClient interface {
-	CreateObjectByStringJson(ctx context.Context, in *K8SStringJson, opts ...grpc.CallOption) (*CreateObjectByFileResponse, error)
+	CreateObjectByJson(ctx context.Context, in *K8SJson, opts ...grpc.CallOption) (*CreateObjectByFileResponse, error)
 }
 
 type k8SCallClient struct {
@@ -33,9 +33,9 @@ func NewK8SCallClient(cc grpc.ClientConnInterface) K8SCallClient {
 	return &k8SCallClient{cc}
 }
 
-func (c *k8SCallClient) CreateObjectByStringJson(ctx context.Context, in *K8SStringJson, opts ...grpc.CallOption) (*CreateObjectByFileResponse, error) {
+func (c *k8SCallClient) CreateObjectByJson(ctx context.Context, in *K8SJson, opts ...grpc.CallOption) (*CreateObjectByFileResponse, error) {
 	out := new(CreateObjectByFileResponse)
-	err := c.cc.Invoke(ctx, "/api.K8SCall/CreateObjectByStringJson", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/api.K8SCall/CreateObjectByJson", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -46,7 +46,7 @@ func (c *k8SCallClient) CreateObjectByStringJson(ctx context.Context, in *K8SStr
 // All implementations must embed UnimplementedK8SCallServer
 // for forward compatibility
 type K8SCallServer interface {
-	CreateObjectByStringJson(context.Context, *K8SStringJson) (*CreateObjectByFileResponse, error)
+	CreateObjectByJson(context.Context, *K8SJson) (*CreateObjectByFileResponse, error)
 	mustEmbedUnimplementedK8SCallServer()
 }
 
@@ -54,8 +54,8 @@ type K8SCallServer interface {
 type UnimplementedK8SCallServer struct {
 }
 
-func (UnimplementedK8SCallServer) CreateObjectByStringJson(context.Context, *K8SStringJson) (*CreateObjectByFileResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method CreateObjectByStringJson not implemented")
+func (UnimplementedK8SCallServer) CreateObjectByJson(context.Context, *K8SJson) (*CreateObjectByFileResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CreateObjectByJson not implemented")
 }
 func (UnimplementedK8SCallServer) mustEmbedUnimplementedK8SCallServer() {}
 
@@ -70,20 +70,20 @@ func RegisterK8SCallServer(s grpc.ServiceRegistrar, srv K8SCallServer) {
 	s.RegisterService(&K8SCall_ServiceDesc, srv)
 }
 
-func _K8SCall_CreateObjectByStringJson_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(K8SStringJson)
+func _K8SCall_CreateObjectByJson_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(K8SJson)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(K8SCallServer).CreateObjectByStringJson(ctx, in)
+		return srv.(K8SCallServer).CreateObjectByJson(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/api.K8SCall/CreateObjectByStringJson",
+		FullMethod: "/api.K8SCall/CreateObjectByJson",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(K8SCallServer).CreateObjectByStringJson(ctx, req.(*K8SStringJson))
+		return srv.(K8SCallServer).CreateObjectByJson(ctx, req.(*K8SJson))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -96,8 +96,8 @@ var K8SCall_ServiceDesc = grpc.ServiceDesc{
 	HandlerType: (*K8SCallServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
-			MethodName: "CreateObjectByStringJson",
-			Handler:    _K8SCall_CreateObjectByStringJson_Handler,
+			MethodName: "CreateObjectByJson",
+			Handler:    _K8SCall_CreateObjectByJson_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

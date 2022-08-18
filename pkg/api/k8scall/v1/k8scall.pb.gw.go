@@ -31,8 +31,8 @@ var _ = runtime.String
 var _ = utilities.NewDoubleArray
 var _ = metadata.Join
 
-func request_K8SCall_CreateObjectByStringJson_0(ctx context.Context, marshaler runtime.Marshaler, client K8SCallClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq K8SStringJson
+func request_K8SCall_CreateObjectByJson_0(ctx context.Context, marshaler runtime.Marshaler, client K8SCallClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+	var protoReq K8SJson
 	var metadata runtime.ServerMetadata
 
 	newReader, berr := utilities.IOReaderFactory(req.Body)
@@ -43,13 +43,13 @@ func request_K8SCall_CreateObjectByStringJson_0(ctx context.Context, marshaler r
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
 
-	msg, err := client.CreateObjectByStringJson(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
+	msg, err := client.CreateObjectByJson(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
 	return msg, metadata, err
 
 }
 
-func local_request_K8SCall_CreateObjectByStringJson_0(ctx context.Context, marshaler runtime.Marshaler, server K8SCallServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq K8SStringJson
+func local_request_K8SCall_CreateObjectByJson_0(ctx context.Context, marshaler runtime.Marshaler, server K8SCallServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+	var protoReq K8SJson
 	var metadata runtime.ServerMetadata
 
 	newReader, berr := utilities.IOReaderFactory(req.Body)
@@ -60,7 +60,7 @@ func local_request_K8SCall_CreateObjectByStringJson_0(ctx context.Context, marsh
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
 
-	msg, err := server.CreateObjectByStringJson(ctx, &protoReq)
+	msg, err := server.CreateObjectByJson(ctx, &protoReq)
 	return msg, metadata, err
 
 }
@@ -71,7 +71,7 @@ func local_request_K8SCall_CreateObjectByStringJson_0(ctx context.Context, marsh
 // Note that using this registration option will cause many gRPC library features to stop working. Consider using RegisterK8SCallHandlerFromEndpoint instead.
 func RegisterK8SCallHandlerServer(ctx context.Context, mux *runtime.ServeMux, server K8SCallServer) error {
 
-	mux.Handle("POST", pattern_K8SCall_CreateObjectByStringJson_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle("POST", pattern_K8SCall_CreateObjectByJson_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		var stream runtime.ServerTransportStream
@@ -79,12 +79,12 @@ func RegisterK8SCallHandlerServer(ctx context.Context, mux *runtime.ServeMux, se
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
 		var annotatedContext context.Context
-		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/api.K8SCall/CreateObjectByStringJson", runtime.WithHTTPPathPattern("/api.K8SCall/CreateObjectByStringJson"))
+		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/api.K8SCall/CreateObjectByJson", runtime.WithHTTPPathPattern("/api.K8SCall/CreateObjectByJson"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := local_request_K8SCall_CreateObjectByStringJson_0(annotatedContext, inboundMarshaler, server, req, pathParams)
+		resp, md, err := local_request_K8SCall_CreateObjectByJson_0(annotatedContext, inboundMarshaler, server, req, pathParams)
 		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
 		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
@@ -92,7 +92,7 @@ func RegisterK8SCallHandlerServer(ctx context.Context, mux *runtime.ServeMux, se
 			return
 		}
 
-		forward_K8SCall_CreateObjectByStringJson_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_K8SCall_CreateObjectByJson_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 
 	})
 
@@ -137,25 +137,25 @@ func RegisterK8SCallHandler(ctx context.Context, mux *runtime.ServeMux, conn *gr
 // "K8SCallClient" to call the correct interceptors.
 func RegisterK8SCallHandlerClient(ctx context.Context, mux *runtime.ServeMux, client K8SCallClient) error {
 
-	mux.Handle("POST", pattern_K8SCall_CreateObjectByStringJson_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle("POST", pattern_K8SCall_CreateObjectByJson_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
 		var annotatedContext context.Context
-		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/api.K8SCall/CreateObjectByStringJson", runtime.WithHTTPPathPattern("/api.K8SCall/CreateObjectByStringJson"))
+		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/api.K8SCall/CreateObjectByJson", runtime.WithHTTPPathPattern("/api.K8SCall/CreateObjectByJson"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := request_K8SCall_CreateObjectByStringJson_0(annotatedContext, inboundMarshaler, client, req, pathParams)
+		resp, md, err := request_K8SCall_CreateObjectByJson_0(annotatedContext, inboundMarshaler, client, req, pathParams)
 		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
 			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
 
-		forward_K8SCall_CreateObjectByStringJson_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_K8SCall_CreateObjectByJson_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 
 	})
 
@@ -163,9 +163,9 @@ func RegisterK8SCallHandlerClient(ctx context.Context, mux *runtime.ServeMux, cl
 }
 
 var (
-	pattern_K8SCall_CreateObjectByStringJson_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"api.K8SCall", "CreateObjectByStringJson"}, ""))
+	pattern_K8SCall_CreateObjectByJson_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"api.K8SCall", "CreateObjectByJson"}, ""))
 )
 
 var (
-	forward_K8SCall_CreateObjectByStringJson_0 = runtime.ForwardResponseMessage
+	forward_K8SCall_CreateObjectByJson_0 = runtime.ForwardResponseMessage
 )

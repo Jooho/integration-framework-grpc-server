@@ -55,7 +55,7 @@ gen-v1-proto:
 	 
 .PHONY: clean-proto
 clean-v1-proto: 
-	find ./pkg/api/v1/ -name "*.go"  |xargs rm -rf
+	find ./pkg/api/*/v1/ -name "*.go"  |xargs rm -rf
 	rm -rf /tmp/pkg
 
 .PHONY: run

@@ -5,11 +5,11 @@ package api;
 option go_package = ".;k8scall";
 
 service K8SCall {
-  rpc CreateObjectByStringJson(K8SStringJson) returns (CreateObjectByFileResponse);
+  rpc CreateObjectByJson(K8SJson) returns (CreateObjectByFileResponse);
 }
 
-message K8SStringJson {
-  string manifest = 1;
+message K8SJson {
+  bytes manifest = 1;
   string namespace = 2;
 }
 

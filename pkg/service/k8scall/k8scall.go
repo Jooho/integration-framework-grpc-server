@@ -3,7 +3,6 @@ package k8scall
 import (
 	"context"
 	"fmt"
-	"strings"
 
 	"google.golang.org/grpc"
 
@@ -42,15 +41,12 @@ func NewK8sCallServer(s grpc.Server, scheme *runtime.Scheme, c *kubernetes.Clien
 	v1k8scall.RegisterK8SCallServer(&s, k8sCallServer)
 }
 
-func (k *k8sCallServer) CreateObjectByStringJson(ctx context.Context, req *v1k8scall.K8SStringJson) (*v1k8scall.CreateObjectByFileResponse, error) {
-	logger.Log.Debug("Entry k8scall.go - CreateObjectByStringJson")
-	logger.Log.Debug(fmt.Sprintf("File String: '%s'", req.Manifest))
+func (k *k8sCallServer) CreateObjectByJson(ctx context.Context, req *v1k8scall.K8SJson) (*v1k8scall.CreateObjectByFileResponse, error) {
+	logger.Log.Debug("Entry k8scall.go - CreateObjectByJson")
+	logger.Log.Debug(fmt.Sprintf("File String: '%s'", req.Manifest[:]))
 	logger.Log.Debug(fmt.Sprintf("Namespace: '%s'", req.Namespace))
-
-	reqStringJson := strings.ReplaceAll(req.Manifest, "\\\"", "")
-	reqByteJson := []byte(reqStringJson)
-
-	logger.Log.Debug(fmt.Sprintf("Json String: '%s'", reqStringJson))
+	
+	reqByteJson := req.Manifest
 
 	// 1. Prepare a RESTMapper to find GVR
 	dc, err := discovery.NewDiscoveryClientForConfig(k.config)
