@@ -5,11 +5,16 @@ package api;
 
 import "google/protobuf/timestamp.proto";
 import "google/protobuf/any.proto";
+import "google/api/annotations.proto";
 
 option go_package = ".;user";
 
 service User {
-  rpc GetUser(GetUserRequest) returns (GetUserResponse);
+  rpc GetUser(GetUserRequest) returns (GetUserResponse) {
+    option (google.api.http) = {
+      get : "/v1/users/{user_id}"
+    };
+  }
   rpc ListUsers(ListUsersRequest) returns (ListUsersResponse);
 }
 

@@ -24,7 +24,7 @@ fi
 
 pb_dir=/tmp/proto
 
-find ./proto/v1 -name "*.proto" | xargs -I % sh -c "protoc --proto_path=. --proto_path=./proto/protoc3 --proto_path=./vendor  --go_out ${tmp_dir} --go_opt paths=source_relative --go-grpc_out ${tmp_dir} --go-grpc_opt paths=source_relative %"
+find ./proto/v1 -name "*.proto" | xargs -I % sh -c "protoc --proto_path=. --proto_path=./proto/protoc3 --proto_path=./vendor  --go_out ${tmp_dir} --go_opt paths=source_relative --go-grpc_out ${tmp_dir} --go-grpc_opt paths=source_relative  --grpc-gateway_out ${tmp_dir}   --grpc-gateway_opt logtostderr=true --grpc-gateway_opt paths=source_relative     --grpc-gateway_opt generate_unbound_methods=true %"
 
 for file in $(find ${pb_dir}/${version} -type f -name "*.go")
 do
