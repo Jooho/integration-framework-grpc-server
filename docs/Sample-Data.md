@@ -5,7 +5,7 @@ This doc contains sample test data for gGPC API call. You can use grpcui or grpc
 - GetRenderedStorageManifest
   ~~~
   {
-  "storageType": "s3",
+  "type": "s3",
   "namespace": "test-if",
   "parameters": {
         "AWS_ACCESS_KEY_ID": "aws-key-id-value",

@@ -4,31 +4,66 @@ package api;
 
 option go_package = ".;storage";
 
-// import "k8s.io/api/core/v1/generated.proto";
-// import "google/protobuf/field_mask.proto";
+import "google/api/annotations.proto";
 
 service Storage {
+  rpc GetStorageTypes(GetStorageTypesRequest)
+      returns (GetStorageTypesResponse) {
+    option (google.api.http) = {
+      get : "/api/v1/storage"
+    };
+  }
+
   rpc GetStorageParams(GetStorageParamsRequest)
-      returns (GetStorageParamResponse);
-  rpc GetRenderedStorageManifest(CreateStorageRequest)
-      returns (CreateStorageResponse);
+      returns (GetStorageParamResponse) {
+    option (google.api.http) = {
+      get : "/api/v1/storage/{type}"
+    };
+  }
+
+  rpc ListStorage(ListStorageRequest)
+      returns (ListStorageResponse) {
+    option (google.api.http) = {
+      get : "/api/v1/{namespace}/storage"
+    };
+  }
+
+  rpc GetRenderedStorageManifest(RenderedStorageRequest)
+      returns (RenderedStorageResponse) {
+    option (google.api.http) = {
+      post : "/api/v1/{namespace}/storage/{type}"
+      body : "*"
+    };
+  }
 }
 
-message GetStorageParamsRequest { string storageType = 1; }
+message GetStorageParamsRequest { string type = 1; }
 
 message GetStorageParamResponse {
-
-  string storageType = 1;
-  string parameters = 2;
+  string type = 1;
+  bytes parameters = 2;
 }
 
-message CreateStorageRequest {
-  string storageType = 1;
+message RenderedStorageRequest {
+  string type = 1;
   string namespace = 2;
 
   map<string, string> parameters = 3;
 }
 
-message CreateStorageResponse {
-  bytes manifest = 1;
+message RenderedStorageResponse { bytes manifest = 1; }
+
+message GetStorageTypesRequest {}
+
+message GetStorageTypesResponse { repeated string types = 1; }
+
+message ListStorageRequest {
+  string namespace =1 ;
+}
+message ListStorageResponse {
+  map<string, StorageList> storages = 1;
+}
+
+message StorageList {
+  repeated string items =1;
 }

@@ -22,8 +22,10 @@ const _ = grpc.SupportPackageIsVersion7
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type StorageClient interface {
+	GetStorageTypes(ctx context.Context, in *GetStorageTypesRequest, opts ...grpc.CallOption) (*GetStorageTypesResponse, error)
 	GetStorageParams(ctx context.Context, in *GetStorageParamsRequest, opts ...grpc.CallOption) (*GetStorageParamResponse, error)
-	GetRenderedStorageManifest(ctx context.Context, in *CreateStorageRequest, opts ...grpc.CallOption) (*CreateStorageResponse, error)
+	ListStorage(ctx context.Context, in *ListStorageRequest, opts ...grpc.CallOption) (*ListStorageResponse, error)
+	GetRenderedStorageManifest(ctx context.Context, in *RenderedStorageRequest, opts ...grpc.CallOption) (*RenderedStorageResponse, error)
 }
 
 type storageClient struct {
@@ -32,6 +34,15 @@ type storageClient struct {
 
 func NewStorageClient(cc grpc.ClientConnInterface) StorageClient {
 	return &storageClient{cc}
+}
+
+func (c *storageClient) GetStorageTypes(ctx context.Context, in *GetStorageTypesRequest, opts ...grpc.CallOption) (*GetStorageTypesResponse, error) {
+	out := new(GetStorageTypesResponse)
+	err := c.cc.Invoke(ctx, "/api.Storage/GetStorageTypes", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
 }
 
 func (c *storageClient) GetStorageParams(ctx context.Context, in *GetStorageParamsRequest, opts ...grpc.CallOption) (*GetStorageParamResponse, error) {
@@ -43,8 +54,17 @@ func (c *storageClient) GetStorageParams(ctx context.Context, in *GetStoragePara
 	return out, nil
 }
 
-func (c *storageClient) GetRenderedStorageManifest(ctx context.Context, in *CreateStorageRequest, opts ...grpc.CallOption) (*CreateStorageResponse, error) {
-	out := new(CreateStorageResponse)
+func (c *storageClient) ListStorage(ctx context.Context, in *ListStorageRequest, opts ...grpc.CallOption) (*ListStorageResponse, error) {
+	out := new(ListStorageResponse)
+	err := c.cc.Invoke(ctx, "/api.Storage/ListStorage", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *storageClient) GetRenderedStorageManifest(ctx context.Context, in *RenderedStorageRequest, opts ...grpc.CallOption) (*RenderedStorageResponse, error) {
+	out := new(RenderedStorageResponse)
 	err := c.cc.Invoke(ctx, "/api.Storage/GetRenderedStorageManifest", in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -56,8 +76,10 @@ func (c *storageClient) GetRenderedStorageManifest(ctx context.Context, in *Crea
 // All implementations must embed UnimplementedStorageServer
 // for forward compatibility
 type StorageServer interface {
+	GetStorageTypes(context.Context, *GetStorageTypesRequest) (*GetStorageTypesResponse, error)
 	GetStorageParams(context.Context, *GetStorageParamsRequest) (*GetStorageParamResponse, error)
-	GetRenderedStorageManifest(context.Context, *CreateStorageRequest) (*CreateStorageResponse, error)
+	ListStorage(context.Context, *ListStorageRequest) (*ListStorageResponse, error)
+	GetRenderedStorageManifest(context.Context, *RenderedStorageRequest) (*RenderedStorageResponse, error)
 	mustEmbedUnimplementedStorageServer()
 }
 
@@ -65,10 +87,16 @@ type StorageServer interface {
 type UnimplementedStorageServer struct {
 }
 
+func (UnimplementedStorageServer) GetStorageTypes(context.Context, *GetStorageTypesRequest) (*GetStorageTypesResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetStorageTypes not implemented")
+}
 func (UnimplementedStorageServer) GetStorageParams(context.Context, *GetStorageParamsRequest) (*GetStorageParamResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetStorageParams not implemented")
 }
-func (UnimplementedStorageServer) GetRenderedStorageManifest(context.Context, *CreateStorageRequest) (*CreateStorageResponse, error) {
+func (UnimplementedStorageServer) ListStorage(context.Context, *ListStorageRequest) (*ListStorageResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ListStorage not implemented")
+}
+func (UnimplementedStorageServer) GetRenderedStorageManifest(context.Context, *RenderedStorageRequest) (*RenderedStorageResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetRenderedStorageManifest not implemented")
 }
 func (UnimplementedStorageServer) mustEmbedUnimplementedStorageServer() {}
@@ -82,6 +110,24 @@ type UnsafeStorageServer interface {
 
 func RegisterStorageServer(s grpc.ServiceRegistrar, srv StorageServer) {
 	s.RegisterService(&Storage_ServiceDesc, srv)
+}
+
+func _Storage_GetStorageTypes_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetStorageTypesRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(StorageServer).GetStorageTypes(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/api.Storage/GetStorageTypes",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(StorageServer).GetStorageTypes(ctx, req.(*GetStorageTypesRequest))
+	}
+	return interceptor(ctx, in, info, handler)
 }
 
 func _Storage_GetStorageParams_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
@@ -102,8 +148,26 @@ func _Storage_GetStorageParams_Handler(srv interface{}, ctx context.Context, dec
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Storage_ListStorage_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListStorageRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(StorageServer).ListStorage(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/api.Storage/ListStorage",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(StorageServer).ListStorage(ctx, req.(*ListStorageRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _Storage_GetRenderedStorageManifest_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(CreateStorageRequest)
+	in := new(RenderedStorageRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -115,7 +179,7 @@ func _Storage_GetRenderedStorageManifest_Handler(srv interface{}, ctx context.Co
 		FullMethod: "/api.Storage/GetRenderedStorageManifest",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(StorageServer).GetRenderedStorageManifest(ctx, req.(*CreateStorageRequest))
+		return srv.(StorageServer).GetRenderedStorageManifest(ctx, req.(*RenderedStorageRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -128,8 +192,16 @@ var Storage_ServiceDesc = grpc.ServiceDesc{
 	HandlerType: (*StorageServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
+			MethodName: "GetStorageTypes",
+			Handler:    _Storage_GetStorageTypes_Handler,
+		},
+		{
 			MethodName: "GetStorageParams",
 			Handler:    _Storage_GetStorageParams_Handler,
+		},
+		{
+			MethodName: "ListStorage",
+			Handler:    _Storage_ListStorage_Handler,
 		},
 		{
 			MethodName: "GetRenderedStorageManifest",

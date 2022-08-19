@@ -1,0 +1,30 @@
+# gRPC GetStorageTypes
+ GET http://localhost:8000/api/v1/storage HTTP/1.1
+
+###
+
+# gRPC GetStorageParams
+GET http://localhost:8000/api/v1/storage/s3 HTTP/1.1
+
+###
+
+# gRPC ListStorage
+GET http://localhost:8000/api/v1/test-if/storage HTTP/1.1
+
+###
+
+# gRPC GetRenderedStorageManifest
+POST http://localhost:8000/api/v1/test-if/storage/s3 HTTP/1.1
+content-type: application/json
+
+{
+ "parameters": {
+        "AWS_ACCESS_KEY_ID": "aws-key-id-value",
+        "AWS_SECRET_ACCESS_KEY": "aws-secret-value",
+        "AWS_S3_ENDPOINT": "aws-s3-endpoint-value",
+        "AWS_DEFAULT_REGION": "aws-default-region-value",
+        "AWS_DEFAULT_BUCKET": "aws-default-bucket-value",
+        "NAME": "name-value" 
+      }
+}
+

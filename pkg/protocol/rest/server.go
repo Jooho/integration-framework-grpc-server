@@ -10,6 +10,7 @@ import (
 	"github.com/Jooho/integration-framework-server/pkg/logger"
 	"github.com/Jooho/integration-framework-server/pkg/protocol/rest/middleware"
 	userv1 "github.com/Jooho/integration-framework-server/pkg/api/user/v1"
+	storagev1 "github.com/Jooho/integration-framework-server/pkg/api/storage/v1"
 
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
 	"go.uber.org/zap"
@@ -27,9 +28,11 @@ func RunServer(ctx context.Context, grpcPort, httpPort string) error {
 	mux := runtime.NewServeMux()
 	opts := []grpc.DialOption{grpc.WithInsecure()}
 	if err := userv1.RegisterUserHandlerFromEndpoint(ctx, mux, "localhost:"+grpcPort, opts); err != nil {
-		logger.Log.Fatal("failed to start HTTP gateway", zap.String("reason", err.Error()))
+		logger.Log.Fatal("failed to add gRPC User Service to HTTP gateway", zap.String("reason", err.Error()))
 	}
-
+	if err := storagev1.RegisterStorageHandlerFromEndpoint(ctx, mux, "localhost:"+grpcPort, opts); err != nil {
+		logger.Log.Fatal("failed to add gRPC Storage Service to HTTP gateway", zap.String("reason", err.Error()))
+	}
 	srv := &http.Server{
 		Addr: ":" + httpPort,
 		// add handler with middleware

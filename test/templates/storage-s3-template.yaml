@@ -20,8 +20,9 @@ objects:
   kind: Secret
   metadata:
     labels:
-      opendatahub.io/odh-managed: "true"
-      opendatahub.io/odh-type: object-storage
+      opendatahub.io/integration-framework-created: "true"
+      opendatahub.io/integration: "storage"
+      opendatahub.io/storage-type: "s3"
     name: ${NAME}
   type: Opaque
 parameters:
