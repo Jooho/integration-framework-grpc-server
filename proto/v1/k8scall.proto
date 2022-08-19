@@ -3,9 +3,15 @@ syntax = "proto3";
 package api;
 
 option go_package = ".;k8scall";
+import "google/api/annotations.proto";
 
 service K8SCall {
-  rpc CreateObjectByJson(K8SJson) returns (CreateObjectByFileResponse);
+  rpc CreateObjectByJson(K8SJson) returns (CreateObjectByFileResponse){
+    option (google.api.http) = {
+      post : "/api/v1/{namespace}/create"
+      body : "*"
+    };
+  }
 }
 
 message K8SJson {

@@ -12,6 +12,7 @@ import (
 	userv1 "github.com/Jooho/integration-framework-server/pkg/api/user/v1"
 	storagev1 "github.com/Jooho/integration-framework-server/pkg/api/storage/v1"
 	modelservingv1 "github.com/Jooho/integration-framework-server/pkg/api/modelserving/v1"
+	k8scallv1 "github.com/Jooho/integration-framework-server/pkg/api/k8scall/v1"
 
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
 	"go.uber.org/zap"
@@ -36,7 +37,12 @@ func RunServer(ctx context.Context, grpcPort, httpPort string) error {
 	}
 
 	if err := modelservingv1.RegisterModelServingHandlerFromEndpoint(ctx, mux, "localhost:"+grpcPort, opts); err != nil {
-		logger.Log.Fatal("failed to add gRPC Storage Service to HTTP gateway", zap.String("reason", err.Error()))
+		logger.Log.Fatal("failed to add gRPC ModelServing Service to HTTP gateway", zap.String("reason", err.Error()))
+	}
+
+
+	if err := k8scallv1.RegisterK8SCallHandlerFromEndpoint(ctx, mux, "localhost:"+grpcPort, opts); err != nil {
+		logger.Log.Fatal("failed to add gRPC K8SCall Service to HTTP gateway", zap.String("reason", err.Error()))
 	}
 
 	srv := &http.Server{
