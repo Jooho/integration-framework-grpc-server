@@ -28,10 +28,10 @@ This doc contains sample test data for gGPC API call. You can use grpcui or grpc
 - GetAppCustomResource 
   ~~~
   {
-  "appName": "modelserving-openvino",
+  "appName": "openvino",
   "storageType": "s3",
   "storageName": "name-value",
-  "storageNamespace": "test-if",
+  "namespace": "test-if",
   "parameters": {
 	  "MODEL_PATH": "model-path-value",
 	  "MODEL_NAME": "model-name-value",

@@ -11,6 +11,7 @@ import (
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
 	status "google.golang.org/grpc/status"
+	emptypb "google.golang.org/protobuf/types/known/emptypb"
 )
 
 // This is a compile-time assertion to ensure that this generated file
@@ -22,7 +23,7 @@ const _ = grpc.SupportPackageIsVersion7
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type ModelServingClient interface {
-	ListApp(ctx context.Context, in *GetAppRequest, opts ...grpc.CallOption) (*GetAppResponse, error)
+	ListApp(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*GetAppResponse, error)
 	GetAppParams(ctx context.Context, in *GetAppParamsRequest, opts ...grpc.CallOption) (*GetAppParamsResponse, error)
 	GetAppCustomResource(ctx context.Context, in *GetRenderedCRRequest, opts ...grpc.CallOption) (*GetRenderedCRResponse, error)
 }
@@ -35,7 +36,7 @@ func NewModelServingClient(cc grpc.ClientConnInterface) ModelServingClient {
 	return &modelServingClient{cc}
 }
 
-func (c *modelServingClient) ListApp(ctx context.Context, in *GetAppRequest, opts ...grpc.CallOption) (*GetAppResponse, error) {
+func (c *modelServingClient) ListApp(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*GetAppResponse, error) {
 	out := new(GetAppResponse)
 	err := c.cc.Invoke(ctx, "/api.ModelServing/ListApp", in, out, opts...)
 	if err != nil {
@@ -66,7 +67,7 @@ func (c *modelServingClient) GetAppCustomResource(ctx context.Context, in *GetRe
 // All implementations must embed UnimplementedModelServingServer
 // for forward compatibility
 type ModelServingServer interface {
-	ListApp(context.Context, *GetAppRequest) (*GetAppResponse, error)
+	ListApp(context.Context, *emptypb.Empty) (*GetAppResponse, error)
 	GetAppParams(context.Context, *GetAppParamsRequest) (*GetAppParamsResponse, error)
 	GetAppCustomResource(context.Context, *GetRenderedCRRequest) (*GetRenderedCRResponse, error)
 	mustEmbedUnimplementedModelServingServer()
@@ -76,7 +77,7 @@ type ModelServingServer interface {
 type UnimplementedModelServingServer struct {
 }
 
-func (UnimplementedModelServingServer) ListApp(context.Context, *GetAppRequest) (*GetAppResponse, error) {
+func (UnimplementedModelServingServer) ListApp(context.Context, *emptypb.Empty) (*GetAppResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListApp not implemented")
 }
 func (UnimplementedModelServingServer) GetAppParams(context.Context, *GetAppParamsRequest) (*GetAppParamsResponse, error) {
@@ -99,7 +100,7 @@ func RegisterModelServingServer(s grpc.ServiceRegistrar, srv ModelServingServer)
 }
 
 func _ModelServing_ListApp_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetAppRequest)
+	in := new(emptypb.Empty)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -111,7 +112,7 @@ func _ModelServing_ListApp_Handler(srv interface{}, ctx context.Context, dec fun
 		FullMethod: "/api.ModelServing/ListApp",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ModelServingServer).ListApp(ctx, req.(*GetAppRequest))
+		return srv.(ModelServingServer).ListApp(ctx, req.(*emptypb.Empty))
 	}
 	return interceptor(ctx, in, info, handler)
 }

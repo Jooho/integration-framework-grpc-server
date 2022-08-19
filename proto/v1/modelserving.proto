@@ -4,10 +4,29 @@ package api;
 
 option go_package = ".;modelserving";
 
+import "google/api/annotations.proto";
+import "google/protobuf/empty.proto";
+
 service ModelServing {
-  rpc ListApp(GetAppRequest) returns (GetAppResponse);
-  rpc GetAppParams(GetAppParamsRequest) returns (GetAppParamsResponse);
-  rpc GetAppCustomResource(GetRenderedCRRequest) returns (GetRenderedCRResponse);
+  rpc ListApp(google.protobuf.Empty) returns (GetAppResponse) {
+    option (google.api.http) = {
+      get : "/api/v1/modelserving"
+    };
+  }
+
+  rpc GetAppParams(GetAppParamsRequest) returns (GetAppParamsResponse) {
+    option (google.api.http) = {
+      get : "/api/v1/modelserving/{appName}"
+    };
+  }
+  
+  rpc GetAppCustomResource(GetRenderedCRRequest)
+      returns (GetRenderedCRResponse) {
+    option (google.api.http) = {
+      post : "/api/v1/{namespace}/modelserving"
+      body : "*"
+    };
+  }
 }
 
 message Application {
@@ -30,37 +49,30 @@ message Integration {
   string level = 2;
 }
 
-message GetAppRequest {
-  string namespace = 1;
-  optional string appName = 2;
-}
-
 message GetAppResponse { repeated Application applications = 1; }
 
 message GetAppParamsRequest {
   string appName = 1;
   string storageType = 2;
   string storageName = 3;
-  string storageNamespace = 4;
+  string namespace = 4;
 }
 
 message GetAppParamsResponse {
   string appName = 1;
   string storageType = 2;
   string storageName = 3;
-  string storageNamespace = 4;
-  string parameters = 5;
+  string namespace = 4;
+  bytes parameters = 5;
 }
 
 message GetRenderedCRRequest {
   string appName = 1;
   string storageType = 2;
   string storageName = 3;
-  string storageNamespace = 4;
+  string namespace = 4;
 
   map<string, string> parameters = 5;
 }
 
-message GetRenderedCRResponse {
-  bytes manifest = 1;
-}
+message GetRenderedCRResponse { bytes manifest = 1; }

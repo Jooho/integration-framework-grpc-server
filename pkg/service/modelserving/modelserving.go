@@ -19,6 +19,7 @@ import (
 	semver "github.com/coreos/go-semver/semver"
 
 	"google.golang.org/grpc"
+	"google.golang.org/protobuf/types/known/emptypb"
 	"k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime"
@@ -68,11 +69,11 @@ func NewModelServingServer(s grpc.Server, scheme *runtime.Scheme, c *kubernetes.
 	msv1.RegisterModelServingServer(&s, modelserving)
 }
 
-func (m *modelServingServer) ListApp(ctx context.Context, req *msv1.GetAppRequest) (*msv1.GetAppResponse, error) {
+func (m *modelServingServer) ListApp(ctx context.Context, req *emptypb.Empty) (*msv1.GetAppResponse, error) {
 	logger.Log.Debug("Entry modelserving.go - GetApplications")
 
 	appList := []*msv1.Application{}
-	odhIntegrationList, err := m.odhintegrationClient.ODHIntegration(req.Namespace).List(metav1.ListOptions{})
+	odhIntegrationList, err := m.odhintegrationClient.ODHIntegration(constants.TEMPLATE_NAMESPACE).List(metav1.ListOptions{})
 	if err != nil {
 		logger.Log.Error(fmt.Sprintf("Fail to get ODHIntegration List: %v", err))
 		return &msv1.GetAppResponse{}, err
@@ -158,8 +159,8 @@ func (m *modelServingServer) GetAppParams(ctx context.Context, req *msv1.GetAppP
 		AppName:          req.AppName,
 		StorageType:      req.StorageType,
 		StorageName:      req.StorageName,
-		StorageNamespace: req.StorageNamespace,
-		Parameters:       string(parameterBytes),
+		Namespace: req.Namespace,
+		Parameters:       parameterBytes,
 	}
 	logger.Log.Debug(fmt.Sprintf("getAppParamResponse: %s", utils.ProtobufToJson(getAppParamResponse)))
 
@@ -181,9 +182,9 @@ func (m *modelServingServer) GetAppCustomResource(ctx context.Context, req *msv1
 		return &msv1.GetRenderedCRResponse{}, err
 	}
 
-	secret, err := m.clientset.CoreV1().Secrets(req.StorageNamespace).Get(context.Background(), req.StorageName, metav1.GetOptions{})
+	secret, err := m.clientset.CoreV1().Secrets(req.Namespace).Get(context.Background(), req.StorageName, metav1.GetOptions{})
 	if errors.IsNotFound(err) {
-		logger.Log.Error(fmt.Sprintf("Secret(%s) in namespace(%s) is not found: '%v' ", req.StorageName, req.StorageNamespace, err))
+		logger.Log.Error(fmt.Sprintf("Secret(%s) in namespace(%s) is not found: '%v' ", req.StorageName, req.Namespace, err))
 		return &msv1.GetRenderedCRResponse{}, err
 	}
 

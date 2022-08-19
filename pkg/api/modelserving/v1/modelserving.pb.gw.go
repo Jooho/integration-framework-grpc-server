@@ -21,6 +21,7 @@ import (
 	"google.golang.org/grpc/metadata"
 	"google.golang.org/grpc/status"
 	"google.golang.org/protobuf/proto"
+	"google.golang.org/protobuf/types/known/emptypb"
 )
 
 // Suppress "imported and not used" errors
@@ -32,16 +33,8 @@ var _ = utilities.NewDoubleArray
 var _ = metadata.Join
 
 func request_ModelServing_ListApp_0(ctx context.Context, marshaler runtime.Marshaler, client ModelServingClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq GetAppRequest
+	var protoReq emptypb.Empty
 	var metadata runtime.ServerMetadata
-
-	newReader, berr := utilities.IOReaderFactory(req.Body)
-	if berr != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", berr)
-	}
-	if err := marshaler.NewDecoder(newReader()).Decode(&protoReq); err != nil && err != io.EOF {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
-	}
 
 	msg, err := client.ListApp(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
 	return msg, metadata, err
@@ -49,31 +42,43 @@ func request_ModelServing_ListApp_0(ctx context.Context, marshaler runtime.Marsh
 }
 
 func local_request_ModelServing_ListApp_0(ctx context.Context, marshaler runtime.Marshaler, server ModelServingServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq GetAppRequest
+	var protoReq emptypb.Empty
 	var metadata runtime.ServerMetadata
-
-	newReader, berr := utilities.IOReaderFactory(req.Body)
-	if berr != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", berr)
-	}
-	if err := marshaler.NewDecoder(newReader()).Decode(&protoReq); err != nil && err != io.EOF {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
-	}
 
 	msg, err := server.ListApp(ctx, &protoReq)
 	return msg, metadata, err
 
 }
 
+var (
+	filter_ModelServing_GetAppParams_0 = &utilities.DoubleArray{Encoding: map[string]int{"appName": 0}, Base: []int{1, 1, 0}, Check: []int{0, 1, 2}}
+)
+
 func request_ModelServing_GetAppParams_0(ctx context.Context, marshaler runtime.Marshaler, client ModelServingClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var protoReq GetAppParamsRequest
 	var metadata runtime.ServerMetadata
 
-	newReader, berr := utilities.IOReaderFactory(req.Body)
-	if berr != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", berr)
+	var (
+		val string
+		ok  bool
+		err error
+		_   = err
+	)
+
+	val, ok = pathParams["appName"]
+	if !ok {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "appName")
 	}
-	if err := marshaler.NewDecoder(newReader()).Decode(&protoReq); err != nil && err != io.EOF {
+
+	protoReq.AppName, err = runtime.String(val)
+	if err != nil {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "appName", err)
+	}
+
+	if err := req.ParseForm(); err != nil {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
+	}
+	if err := runtime.PopulateQueryParameters(&protoReq, req.Form, filter_ModelServing_GetAppParams_0); err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
 
@@ -86,11 +91,27 @@ func local_request_ModelServing_GetAppParams_0(ctx context.Context, marshaler ru
 	var protoReq GetAppParamsRequest
 	var metadata runtime.ServerMetadata
 
-	newReader, berr := utilities.IOReaderFactory(req.Body)
-	if berr != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", berr)
+	var (
+		val string
+		ok  bool
+		err error
+		_   = err
+	)
+
+	val, ok = pathParams["appName"]
+	if !ok {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "appName")
 	}
-	if err := marshaler.NewDecoder(newReader()).Decode(&protoReq); err != nil && err != io.EOF {
+
+	protoReq.AppName, err = runtime.String(val)
+	if err != nil {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "appName", err)
+	}
+
+	if err := req.ParseForm(); err != nil {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
+	}
+	if err := runtime.PopulateQueryParameters(&protoReq, req.Form, filter_ModelServing_GetAppParams_0); err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
 
@@ -111,6 +132,23 @@ func request_ModelServing_GetAppCustomResource_0(ctx context.Context, marshaler 
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
 
+	var (
+		val string
+		ok  bool
+		err error
+		_   = err
+	)
+
+	val, ok = pathParams["namespace"]
+	if !ok {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "namespace")
+	}
+
+	protoReq.Namespace, err = runtime.String(val)
+	if err != nil {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "namespace", err)
+	}
+
 	msg, err := client.GetAppCustomResource(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
 	return msg, metadata, err
 
@@ -128,6 +166,23 @@ func local_request_ModelServing_GetAppCustomResource_0(ctx context.Context, mars
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
 
+	var (
+		val string
+		ok  bool
+		err error
+		_   = err
+	)
+
+	val, ok = pathParams["namespace"]
+	if !ok {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "namespace")
+	}
+
+	protoReq.Namespace, err = runtime.String(val)
+	if err != nil {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "namespace", err)
+	}
+
 	msg, err := server.GetAppCustomResource(ctx, &protoReq)
 	return msg, metadata, err
 
@@ -139,7 +194,7 @@ func local_request_ModelServing_GetAppCustomResource_0(ctx context.Context, mars
 // Note that using this registration option will cause many gRPC library features to stop working. Consider using RegisterModelServingHandlerFromEndpoint instead.
 func RegisterModelServingHandlerServer(ctx context.Context, mux *runtime.ServeMux, server ModelServingServer) error {
 
-	mux.Handle("POST", pattern_ModelServing_ListApp_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle("GET", pattern_ModelServing_ListApp_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		var stream runtime.ServerTransportStream
@@ -147,7 +202,7 @@ func RegisterModelServingHandlerServer(ctx context.Context, mux *runtime.ServeMu
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
 		var annotatedContext context.Context
-		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/api.ModelServing/ListApp", runtime.WithHTTPPathPattern("/api.ModelServing/ListApp"))
+		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/api.ModelServing/ListApp", runtime.WithHTTPPathPattern("/api/v1/modelserving"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -164,7 +219,7 @@ func RegisterModelServingHandlerServer(ctx context.Context, mux *runtime.ServeMu
 
 	})
 
-	mux.Handle("POST", pattern_ModelServing_GetAppParams_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle("GET", pattern_ModelServing_GetAppParams_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		var stream runtime.ServerTransportStream
@@ -172,7 +227,7 @@ func RegisterModelServingHandlerServer(ctx context.Context, mux *runtime.ServeMu
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
 		var annotatedContext context.Context
-		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/api.ModelServing/GetAppParams", runtime.WithHTTPPathPattern("/api.ModelServing/GetAppParams"))
+		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/api.ModelServing/GetAppParams", runtime.WithHTTPPathPattern("/api/v1/modelserving/{appName}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -197,7 +252,7 @@ func RegisterModelServingHandlerServer(ctx context.Context, mux *runtime.ServeMu
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
 		var annotatedContext context.Context
-		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/api.ModelServing/GetAppCustomResource", runtime.WithHTTPPathPattern("/api.ModelServing/GetAppCustomResource"))
+		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/api.ModelServing/GetAppCustomResource", runtime.WithHTTPPathPattern("/api/v1/{namespace}/modelserving"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -255,13 +310,13 @@ func RegisterModelServingHandler(ctx context.Context, mux *runtime.ServeMux, con
 // "ModelServingClient" to call the correct interceptors.
 func RegisterModelServingHandlerClient(ctx context.Context, mux *runtime.ServeMux, client ModelServingClient) error {
 
-	mux.Handle("POST", pattern_ModelServing_ListApp_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle("GET", pattern_ModelServing_ListApp_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
 		var annotatedContext context.Context
-		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/api.ModelServing/ListApp", runtime.WithHTTPPathPattern("/api.ModelServing/ListApp"))
+		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/api.ModelServing/ListApp", runtime.WithHTTPPathPattern("/api/v1/modelserving"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -277,13 +332,13 @@ func RegisterModelServingHandlerClient(ctx context.Context, mux *runtime.ServeMu
 
 	})
 
-	mux.Handle("POST", pattern_ModelServing_GetAppParams_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle("GET", pattern_ModelServing_GetAppParams_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
 		var annotatedContext context.Context
-		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/api.ModelServing/GetAppParams", runtime.WithHTTPPathPattern("/api.ModelServing/GetAppParams"))
+		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/api.ModelServing/GetAppParams", runtime.WithHTTPPathPattern("/api/v1/modelserving/{appName}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -305,7 +360,7 @@ func RegisterModelServingHandlerClient(ctx context.Context, mux *runtime.ServeMu
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
 		var annotatedContext context.Context
-		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/api.ModelServing/GetAppCustomResource", runtime.WithHTTPPathPattern("/api.ModelServing/GetAppCustomResource"))
+		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/api.ModelServing/GetAppCustomResource", runtime.WithHTTPPathPattern("/api/v1/{namespace}/modelserving"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -325,11 +380,11 @@ func RegisterModelServingHandlerClient(ctx context.Context, mux *runtime.ServeMu
 }
 
 var (
-	pattern_ModelServing_ListApp_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"api.ModelServing", "ListApp"}, ""))
+	pattern_ModelServing_ListApp_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2}, []string{"api", "v1", "modelserving"}, ""))
 
-	pattern_ModelServing_GetAppParams_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"api.ModelServing", "GetAppParams"}, ""))
+	pattern_ModelServing_GetAppParams_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 1, 0, 4, 1, 5, 3}, []string{"api", "v1", "modelserving", "appName"}, ""))
 
-	pattern_ModelServing_GetAppCustomResource_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"api.ModelServing", "GetAppCustomResource"}, ""))
+	pattern_ModelServing_GetAppCustomResource_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 4, 1, 5, 2, 2, 3}, []string{"api", "v1", "namespace", "modelserving"}, ""))
 )
 
 var (
