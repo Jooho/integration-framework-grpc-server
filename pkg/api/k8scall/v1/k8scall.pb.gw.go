@@ -113,7 +113,7 @@ func RegisterK8SCallHandlerServer(ctx context.Context, mux *runtime.ServeMux, se
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
 		var annotatedContext context.Context
-		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/api.K8SCall/CreateObjectByJson", runtime.WithHTTPPathPattern("/api/v1/{namespace}/create"))
+		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/api.K8SCall/CreateObjectByJson", runtime.WithHTTPPathPattern("/api/v1/ns/{namespace}/create"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -177,7 +177,7 @@ func RegisterK8SCallHandlerClient(ctx context.Context, mux *runtime.ServeMux, cl
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
 		var annotatedContext context.Context
-		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/api.K8SCall/CreateObjectByJson", runtime.WithHTTPPathPattern("/api/v1/{namespace}/create"))
+		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/api.K8SCall/CreateObjectByJson", runtime.WithHTTPPathPattern("/api/v1/ns/{namespace}/create"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -197,7 +197,7 @@ func RegisterK8SCallHandlerClient(ctx context.Context, mux *runtime.ServeMux, cl
 }
 
 var (
-	pattern_K8SCall_CreateObjectByJson_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 4, 1, 5, 2, 2, 3}, []string{"api", "v1", "namespace", "create"}, ""))
+	pattern_K8SCall_CreateObjectByJson_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 1, 0, 4, 1, 5, 3, 2, 4}, []string{"api", "v1", "ns", "namespace", "create"}, ""))
 )
 
 var (

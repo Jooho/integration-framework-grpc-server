@@ -23,7 +23,7 @@ service ModelServing {
   rpc GetAppCustomResource(GetRenderedCRRequest)
       returns (GetRenderedCRResponse) {
     option (google.api.http) = {
-      post : "/api/v1/{namespace}/modelserving"
+      post : "/api/v1/ns/{namespace}/modelserving"
       body : "*"
     };
   }

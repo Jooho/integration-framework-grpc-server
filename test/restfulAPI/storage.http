@@ -9,12 +9,12 @@ GET http://localhost:8000/api/v1/storage/s3 HTTP/1.1
 ###
 
 # gRPC ListStorage
-GET http://localhost:8000/api/v1/test-if/storage HTTP/1.1
+GET http://localhost:8000/api/v1/ns/test-if/storage HTTP/1.1
 
 ###
 
 # gRPC GetRenderedStorageManifest
-POST http://localhost:8000/api/v1/test-if/storage/s3 HTTP/1.1
+POST http://localhost:8000/api/v1/ns/test-if/storage/s3 HTTP/1.1
 content-type: application/json
 
 {

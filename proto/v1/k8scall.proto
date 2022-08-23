@@ -8,7 +8,7 @@ import "google/api/annotations.proto";
 service K8SCall {
   rpc CreateObjectByJson(K8SJson) returns (CreateObjectByFileResponse){
     option (google.api.http) = {
-      post : "/api/v1/{namespace}/create"
+      post : "/api/v1/ns/{namespace}/create"
       body : "*"
     };
   }

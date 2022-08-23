@@ -305,7 +305,7 @@ func RegisterStorageHandlerServer(ctx context.Context, mux *runtime.ServeMux, se
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
 		var annotatedContext context.Context
-		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/api.Storage/ListStorage", runtime.WithHTTPPathPattern("/api/v1/{namespace}/storage"))
+		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/api.Storage/ListStorage", runtime.WithHTTPPathPattern("/api/v1/ns/{namespace}/storage"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -330,7 +330,7 @@ func RegisterStorageHandlerServer(ctx context.Context, mux *runtime.ServeMux, se
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
 		var annotatedContext context.Context
-		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/api.Storage/GetRenderedStorageManifest", runtime.WithHTTPPathPattern("/api/v1/{namespace}/storage/{type}"))
+		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/api.Storage/GetRenderedStorageManifest", runtime.WithHTTPPathPattern("/api/v1/ns/{namespace}/storage/{type}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -438,7 +438,7 @@ func RegisterStorageHandlerClient(ctx context.Context, mux *runtime.ServeMux, cl
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
 		var annotatedContext context.Context
-		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/api.Storage/ListStorage", runtime.WithHTTPPathPattern("/api/v1/{namespace}/storage"))
+		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/api.Storage/ListStorage", runtime.WithHTTPPathPattern("/api/v1/ns/{namespace}/storage"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -460,7 +460,7 @@ func RegisterStorageHandlerClient(ctx context.Context, mux *runtime.ServeMux, cl
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
 		var annotatedContext context.Context
-		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/api.Storage/GetRenderedStorageManifest", runtime.WithHTTPPathPattern("/api/v1/{namespace}/storage/{type}"))
+		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/api.Storage/GetRenderedStorageManifest", runtime.WithHTTPPathPattern("/api/v1/ns/{namespace}/storage/{type}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -484,9 +484,9 @@ var (
 
 	pattern_Storage_GetStorageParams_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 1, 0, 4, 1, 5, 3}, []string{"api", "v1", "storage", "type"}, ""))
 
-	pattern_Storage_ListStorage_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 4, 1, 5, 2, 2, 3}, []string{"api", "v1", "namespace", "storage"}, ""))
+	pattern_Storage_ListStorage_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 1, 0, 4, 1, 5, 3, 2, 4}, []string{"api", "v1", "ns", "namespace", "storage"}, ""))
 
-	pattern_Storage_GetRenderedStorageManifest_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 4, 1, 5, 2, 2, 3, 1, 0, 4, 1, 5, 4}, []string{"api", "v1", "namespace", "storage", "type"}, ""))
+	pattern_Storage_GetRenderedStorageManifest_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 1, 0, 4, 1, 5, 3, 2, 4, 1, 0, 4, 1, 5, 5}, []string{"api", "v1", "ns", "namespace", "storage", "type"}, ""))
 )
 
 var (

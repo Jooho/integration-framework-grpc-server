@@ -24,14 +24,14 @@ service Storage {
   rpc ListStorage(ListStorageRequest)
       returns (ListStorageResponse) {
     option (google.api.http) = {
-      get : "/api/v1/{namespace}/storage"
+      get : "/api/v1/ns/{namespace}/storage"
     };
   }
 
   rpc GetRenderedStorageManifest(RenderedStorageRequest)
       returns (RenderedStorageResponse) {
     option (google.api.http) = {
-      post : "/api/v1/{namespace}/storage/{type}"
+      post : "/api/v1/ns/{namespace}/storage/{type}"
       body : "*"
     };
   }

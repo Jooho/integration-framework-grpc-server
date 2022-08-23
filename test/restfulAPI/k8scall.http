@@ -1,5 +1,5 @@
 # gRPC CreateObjectByJson with openvino manifest
-POST http://localhost:8000/api/v1/test-if/create HTTP/1.1
+POST http://localhost:8000/api/v1/ns/test-if/create HTTP/1.1
 content-type: application/json
 
 {

@@ -1,5 +1,5 @@
 # gRPC ListApp
- GET http://localhost:8000/api/v1/modelserving HTTP/1.1
+GET http://localhost:8000/api/v1/modelserving HTTP/1.1
 
 ###
 
@@ -13,7 +13,7 @@ GET http://localhost:8000/api/v1/modelserving/openvino?storageType=s3&storageNam
 ###
 
 #gRPC GetAppCustomResource
-POST http://localhost:8000/api/v1/test-if/modelserving HTTP/1.1
+POST http://localhost:8000/api/v1/ns/test-if/modelserving HTTP/1.1
 content-type: application/json
 
 {
