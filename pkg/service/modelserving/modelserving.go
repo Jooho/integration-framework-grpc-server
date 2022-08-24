@@ -25,6 +25,7 @@ import (
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/client-go/kubernetes"
 	"k8s.io/client-go/rest"
+	// "k8s.io/apimachinery/pkg/runtime/schema"
 )
 
 type modelServingServer struct {
@@ -156,11 +157,11 @@ func (m *modelServingServer) GetAppParams(ctx context.Context, req *msv1.GetAppP
 	}
 
 	getAppParamResponse := &msv1.GetAppParamsResponse{
-		AppName:          req.AppName,
-		StorageType:      req.StorageType,
-		StorageName:      req.StorageName,
-		Namespace: req.Namespace,
-		Parameters:       parameterBytes,
+		AppName:     req.AppName,
+		StorageType: req.StorageType,
+		StorageName: req.StorageName,
+		Namespace:   req.Namespace,
+		Parameters:  parameterBytes,
 	}
 	logger.Log.Debug(fmt.Sprintf("getAppParamResponse: %s", utils.ProtobufToJson(getAppParamResponse)))
 
@@ -199,6 +200,7 @@ func (m *modelServingServer) GetAppCustomResource(ctx context.Context, req *msv1
 	return &msv1.GetRenderedCRResponse{Manifest: []byte(jsonString)}, nil
 
 }
+
 func processString(scheme *runtime.Scheme, values map[string]string, templateClient *templatev1client.TemplateV1Client, in *templatev1.Template) (string, error) {
 	logger.Log.Debug("Entry modelserving.go - processString")
 	logger.Log.Debug(fmt.Sprintf("Template(%s) Parameters : %v", in.Name, values))

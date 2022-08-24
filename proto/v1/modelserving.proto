@@ -14,7 +14,7 @@ service ModelServing {
     };
   }
 
-  rpc GetAppParams(GetAppParamsRequest) returns (GetAppParamsResponse) {
+   rpc GetAppParams(GetAppParamsRequest) returns (GetAppParamsResponse) {
     option (google.api.http) = {
       get : "/api/v1/modelserving/{appName}"
     };
