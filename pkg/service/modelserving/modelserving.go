@@ -158,7 +158,6 @@ func (m *modelServingServer) GetAppParams(ctx context.Context, req *msv1.GetAppP
 
 	getAppParamResponse := &msv1.GetAppParamsResponse{
 		AppName:     req.AppName,
-		StorageType: req.StorageType,
 		StorageName: req.StorageName,
 		Namespace:   req.Namespace,
 		Parameters:  parameterBytes,

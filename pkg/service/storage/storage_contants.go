@@ -6,9 +6,10 @@ var(
 	GCP = "GCP"
 	AZURE ="AZURE"
 	PVC = "PVC"
+	ETC = "STORAGE_TYPE"
 )
 
 func init(){
 	StorageTypes = append(StorageTypes, S3...)
-	StorageTypes = append(StorageTypes, GCP ,AZURE, PVC)
+	StorageTypes = append(StorageTypes, GCP ,AZURE, PVC, ETC)
 }

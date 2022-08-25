@@ -53,26 +53,23 @@ message GetAppResponse { repeated Application applications = 1; }
 
 message GetAppParamsRequest {
   string appName = 1;
-  string storageType = 2;
-  string storageName = 3;
-  string namespace = 4;
+  string storageName = 2;
+  string namespace = 3;
 }
 
 message GetAppParamsResponse {
   string appName = 1;
-  string storageType = 2;
-  string storageName = 3;
-  string namespace = 4;
-  bytes parameters = 5;
+  string storageName = 2;
+  string namespace = 3;
+  bytes parameters = 4;
 }
 
 message GetRenderedCRRequest {
   string appName = 1;
-  string storageType = 2;
-  string storageName = 3;
-  string namespace = 4;
+  string storageName = 2;
+  string namespace = 3;
 
-  map<string, string> parameters = 5;
+  map<string, string> parameters = 4;
 }
 
 message GetRenderedCRResponse { bytes manifest = 1; }
