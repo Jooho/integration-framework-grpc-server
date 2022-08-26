@@ -1,0 +1,53 @@
+apiVersion: tekton.dev/v1beta1
+kind: PipelineRun
+metadata:
+  name: kfp-for-openshift-odh-integration-framework-server
+  annotations:
+    tekton.dev/output_artifacts: '{}'
+    tekton.dev/input_artifacts: '{}'
+    tekton.dev/artifact_bucket: mlpipeline
+    tekton.dev/artifact_endpoint: minio-service.kubeflow:9000
+    tekton.dev/artifact_endpoint_scheme: http://
+    tekton.dev/artifact_items: '{"deploy-model-red-hat-open-data-hub": []}'
+    sidecar.istio.io/inject: "false"
+    pipelines.kubeflow.org/big_data_passing_format: $(workspaces.$TASK_NAME.path)/artifacts/$ORIG_PR_NAME/$TASKRUN_NAME/$TASK_PARAM_NAME
+    pipelines.kubeflow.org/pipeline_spec: '{"description": "Kubeflow pipelines deploy
+      model serving application through integration framework server.", "name": "KFP
+      for OpenShift ODH Integration Framework Server"}'
+spec:
+  pipelineSpec:
+    tasks:
+    - name: deploy-model-red-hat-open-data-hub
+      taskSpec:
+        steps:
+        - name: main
+          args:
+          - -u
+          - /app/model-deploy.py
+          - --app-name
+          - openvino
+          - --storage-name
+          - test-openvino-s3
+          - --namespace
+          - test-if
+          - --parameters
+          - '{"BATCH_SIZE": "batch-size-value", "MODEL_NAME": "model-name-value",
+            "MODEL_PATH": "model-path-value", "MODEL_SERVER_NAMESPACE": "model-server-namespace",
+            "MODEL_SERVER_RESOURCE_NAME": "model-server-resource-name-value", "SHAPE":
+            "shape-value"}'
+          command:
+          - python
+          image: quay.io/jooholee/rhods-integration-framework-deploy:latest
+        metadata:
+          labels:
+            pipelines.kubeflow.org/cache_enabled: "true"
+          annotations:
+            platform: Red Hat Open Data Hub
+            pipelines.kubeflow.org/component_spec_digest: '{"name": "Deploy Model
+              - Red Hat Open Data Hub", "outputs": [], "version": "Deploy Model -
+              Red Hat Open Data Hub@sha256=28b1dd6034ac5b42866d6b6a377773e937d19333f16e5284600905a0424f728b"}'
+            tekton.dev/template: ''
+      timeout: 525600m
+  timeouts:
+    pipeline: 1051200m
+    tasks: 525600m

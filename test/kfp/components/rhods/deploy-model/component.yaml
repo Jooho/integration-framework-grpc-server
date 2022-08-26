@@ -1,0 +1,21 @@
+name: 'Deploy Model - Red Hat Open Data Hub'
+description: |
+  Deploy stored model on Red Hat Open Data Hub as a web service.
+metadata:
+  annotations: {platform: 'Red Hat Open Data Hub'}
+inputs:
+  - {name: app_name,     description: 'Required. ModelServing app name to deploy a model.', default: ''}
+  - {name: storage_name, description: 'Required. Secret name for the credential of the storage.', default: ''}
+  - {name: namespace,    description: 'Required. Namespace name contained the storage secret.', default: ''}
+  - {name: parameters,   description: 'Required. Parameters for ModelServing template.', default: ''}
+implementation:
+  container:
+    image: quay.io/jooholee/rhods-integration-framework-deploy:latest
+    command: ['python']
+    args: [
+      -u, /app/model-deploy.py,
+      --app-name, {inputValue: app_name},
+      --storage-name, {inputValue: storage_name},
+      --namespace, {inputValue: namespace},
+      --parameters, {inputValue: parameters}
+    ]
