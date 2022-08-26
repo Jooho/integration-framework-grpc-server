@@ -42,7 +42,7 @@ python get_required_data.py --app-name openvino --storage-name test-openvino-s3 
  }
  
  ### Add this code snippet ###
- deploy_op = components.load_component_from_file("./component.yaml")
+ deploy_op = components.load_component_from_url("https://raw.githubusercontent.com/Jooho/integration-framework-server/main/test/kfp/components/rhods/deploy-model/component.yaml")
  def kfp_if_pipeline():
      ### Add the following function into your kubeflow pipeline python script. ###
      rhods_deploy = deploy_op(
