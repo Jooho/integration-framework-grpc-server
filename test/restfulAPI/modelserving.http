@@ -28,3 +28,20 @@ content-type: application/json
 	  "MODEL_SERVER_NAMESPACE": "model-server-namespace"
     }
 }
+
+###
+POST https://integration-framework-server-test-if.apps.jlee-test.kojh.s1.devshift.org/api/v1/ns/test-if/modelserving HTTP/1.1
+content-type: application/json
+
+{
+  "appName": "openvino",
+  "storageName": "test-openvino-s3",
+  "parameters": {
+	  "MODEL_PATH": "model-path-value",
+	  "MODEL_NAME": "model-name-value",
+	  "BATCH_SIZE": "batch-size-value",
+	  "SHAPE": "shape-value",
+	  "MODEL_SERVER_RESOURCE_NAME": "model-server-resource-name-value",
+	  "MODEL_SERVER_NAMESPACE": "model-server-namespace"
+    }
+}

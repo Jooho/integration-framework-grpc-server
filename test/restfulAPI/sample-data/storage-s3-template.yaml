@@ -20,7 +20,7 @@ objects:
   kind: Secret
   metadata:
     labels:
-      opendatahub.io/integration-framework-created: "true"
+      opendatahub.io/integration-framework-created: "true" 
       opendatahub.io/integration: "storage"
       opendatahub.io/storage-type: "s3"
     name: ${NAME}
