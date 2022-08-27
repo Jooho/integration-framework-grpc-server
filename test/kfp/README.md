@@ -58,17 +58,16 @@ python get_required_data.py --app-name openvino --storage-name test-openvino-s3 
    kfp-test image is the helper image that uses root user.
 
    - Example(RHODS KUBEFLOW PIPELINE)
-      ~~~
-      # Execute a helper container (kfp-test)
-      make run-kfp-env-img
+    ~~~
+    # Execute a helper container (kfp-test)
+    make run-kfp-env-img
 
-      # Generate a modelserving kubeflow pipeline yaml file
-      python kfp-deploy.py
+    # Generate a modelserving kubeflow pipeline yaml file
+    python kfp-deploy.py
 
-      # Review generated yaml file and upload it to kubeflow tekton pipeline server.
-      cat kfp-deploy.yaml
-      ~~~
-
+    # Review generated yaml file and upload it to kubeflow tekton pipeline server.
+    cat kfp-deploy.yaml
+    ~~~
 
 
 
