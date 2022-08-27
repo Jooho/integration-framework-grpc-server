@@ -69,8 +69,6 @@ python get_required_data.py --app-name openvino --storage-name test-openvino-s3 
     cat kfp-deploy.yaml
     ~~~
 
-
-
 ## Deploy a Model manually using the script for debugging
 deploy-model.py in quay.io/jooholee/rhods-integration-framework-deploy:latest is a script help deploying a model by creating a CR of a modelserving server operator.
 ~~~
