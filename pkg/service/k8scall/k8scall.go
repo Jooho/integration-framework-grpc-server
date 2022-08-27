@@ -109,7 +109,7 @@ func (k *k8sCallServer) CreateObjectByJson(ctx context.Context, req *v1k8scall.K
 			return &v1k8scall.CreateObjectByFileResponse{
 				Ok:          false,
 				Description: fmt.Sprintf("The object already exist:(%s)",err.Error()),
-			}, nil
+			}, err
 		}
 
 	}
