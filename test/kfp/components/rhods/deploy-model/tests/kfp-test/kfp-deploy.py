@@ -30,5 +30,4 @@ def kfp_if_pipeline():
 if __name__ == "__main__":
     # compile the pipeline
     from kfp_tekton.compiler import TektonCompiler
-
     TektonCompiler().compile(kfp_if_pipeline, __file__.replace(".py", ".yaml"))

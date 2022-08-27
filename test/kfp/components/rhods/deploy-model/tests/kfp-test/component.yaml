@@ -13,7 +13,7 @@ implementation:
     image: quay.io/jooholee/rhods-integration-framework-deploy:latest
     command: ['python']
     args: [
-      -u, /app/model-deploy.py,
+      -u, /app/src/deploy-model.py,
       --app-name, {inputValue: app_name},
       --storage-name, {inputValue: storage_name},
       --namespace, {inputValue: namespace},

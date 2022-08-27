@@ -9,58 +9,48 @@ import base64
 # parameters_to_send={}
 
 def deploy(args):
-  # getParameters = requests.get("http://localhost:8000/api/v1/modelserving/{}?storageName={}&namespace={}".format(appName,storageName, namespace))
-  # jsonParams = json.loads(base64.b64decode(getParameters.json()["parameters"]).decode('utf-8'))
-
-  # parameters_to_send={}
-  # for param in jsonParams:
-  #   required = str(param["required"]) if "required" in param else "false"
-  #   print(param["name"] + ": " + param["description"] +" (required:" +required +")")
-  #   parameters_to_send[param["name"]]=""
-
-  # print("\n\nRequired JSON Data: "+json.dumps(parameters_to_send))
-
-
-  # Get rendered manifest
-  # parameters_to_send={
-  #     "MODEL_PATH": "model-path-value",
-  #     "MODEL_NAME": "model-name-value",
-  #     "BATCH_SIZE": "batch-size-value",
-  #     "SHAPE": "shape-value",
-  #     "MODEL_SERVER_RESOURCE_NAME": "model-server-resource-name-value",
-  #     "MODEL_SERVER_NAMESPACE": "model-server-namespace"
-  # }
+  # **Variable Example**
+  # - appName="openvino"
+  # - storageName="test-openvino-s3"
+  # - namespace="test-if"
+  # - parameters={
+  #      "MODEL_PATH": "model-path-value",
+  #      "MODEL_NAME": "model-name-value",
+  #      "BATCH_SIZE": "batch-size-value",
+  #      "SHAPE": "shape-value",
+  #      "MODEL_SERVER_RESOURCE_NAME": "model-server-resource-name-value",
+  #      "MODEL_SERVER_NAMESPACE": "model-server-namespace"
+  #   }
+  env=args.env
   appName=args.app_name
   storageName=args.storage_name
   namespace=args.namespace
   parameters_to_send=json.loads(args.parameters)
+  # url='integration-framework-server.redhat-ods-application.svc.cluster.local:8000'
+  # url='https://integration-framework-server-test-if.apps.jlee-test.kojh.s1.devshift.org'
+  url='http://integration-framework-server.test-if.svc.cluster.local:8000'
 
   data_to_send={
     "appName": appName,
     "storageName": storageName,
     "parameters": parameters_to_send    
   }
-  print(data_to_send)
-  getRenderedManifest = requests.post("http://localhost:8000/api/v1/ns/{}/modelserving".format(namespace),data=json.dumps(data_to_send))
-  # print(renderedManifest.json())
-  jsonManifest = json.loads(base64.b64decode(getRenderedManifest.json()["manifest"]).decode('utf-8'))
-  # print("Manifest\n")
-  # print(json.dumps(jsonManifest))
 
-  # # Create the manifest
-  # renderedManifest_to_send={
-  #   "manifest": getRenderedManifest.json()["manifest"]
-  # }
-  createManifest = requests.post("http://localhost:8000/api/v1/ns/{}/create".format(namespace),data=json.dumps({"manifest": getRenderedManifest.json()["manifest"]}))
+  if env == 'local':
+    url='localhost:8000'
+    
+  getRenderedManifest = requests.post("{}/api/v1/ns/{}/modelserving".format(url,namespace),data=json.dumps(data_to_send))
+  
+  # jsonManifest = json.loads(base64.b64decode(getRenderedManifest.json()["manifest"]).decode('utf-8'))
+  
+  createManifest = requests.post("{}/api/v1/ns/{}/create".format(url,namespace),data=json.dumps({"manifest": getRenderedManifest.json()["manifest"]}))
 
   print(createManifest.json())
 
-# appName="openvino"
-# storageName="test-openvino-s3"
-# namespace="test-if"
 if __name__ == "__main__":
     import argparse
     parser = argparse.ArgumentParser()
+    parser.add_argument('--env', type=str, default='cluster', required=False)
     parser.add_argument('--app-name', type=str, required=True)
     parser.add_argument('--storage-name', type=str, required=True)
     parser.add_argument('--namespace', type=str, required=True)

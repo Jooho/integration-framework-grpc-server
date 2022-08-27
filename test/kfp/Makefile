@@ -13,6 +13,8 @@ build-component-image:
 .PHONY: push-component-image
 push-component-image:
 	podman push ${full_image_name}
+	podman tag ${full_image_name} quay.io/jooholee/rhods-integration-framework-deploy:latest
+	podman push quay.io/jooholee/rhods-integration-framework-deploy:latest
 
 .PHONY: run-deploy-model-img
 run-deploy-model-img:
