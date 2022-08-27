@@ -1,4 +1,9 @@
 
+# Container
+IMG=quay.io/jooholee/integration-framework-server
+IMG_TAG=0.0.1
+FULL_IMG=${IMG}:${IMG_TAG}
+
 # Versions
 PROTOC_VER=21.2
 PROTOC_GEN_GO_GRPC=1.2
@@ -62,3 +67,18 @@ clean-v1-proto:
 .PHONY: run
 run:
 	go run ./cmd/server/main.go --env=$(ENV) --mode=$(MODE) --log-level=$(LOGLEVEL)
+
+
+.PHONY: build-prod
+build-prod:
+	go build ./cmd/server/main.go 
+
+
+# Build the integration framework server
+build-img: test
+	podman build -f ./build/Dockerfile -t ${FULL_IMG} .
+
+# Push the integration framework server
+push-img:
+	podman push ${FULL_IMG}
+

@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: integration-framework-server
+  labels:
+    integration: server
+    provider: redhat
+spec:
+  selector:
+    matchLabels:
+      integration: server
+      provider: redhat
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        integration: server
+        provider: redhat
+    spec:
+      containers:
+      - command:
+        - /integration-framework-server
+        args:
+        - --mode=prod
+        image: quay.io/jooholee/integration-framework-server:latest
+        name: server
+        ports:
+        - name: grpc
+          containerPort: 9000
+        - name: http
+          containerPort: 8000
+        resources:
+          limits:
+            cpu: 100m
+            memory: 500Mi
+          requests:
+            cpu: 100m
+            memory: 100Mi
+      terminationGracePeriodSeconds: 10
