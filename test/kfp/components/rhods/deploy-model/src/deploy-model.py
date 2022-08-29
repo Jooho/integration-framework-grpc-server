@@ -21,7 +21,7 @@ def deploy(args):
   #      "MODEL_SERVER_RESOURCE_NAME": "model-server-resource-name-value",
   #      "MODEL_SERVER_NAMESPACE": "model-server-namespace"
   #   }
-  env=args.env
+  # env=args.env
   appName=args.app_name
   storageName=args.storage_name
   namespace=args.namespace
@@ -36,8 +36,8 @@ def deploy(args):
     "parameters": parameters_to_send    
   }
 
-  if env == 'local':
-    url='localhost:8000'
+  # if env == 'local':
+  #   url='localhost:8000'
     
   getRenderedManifest = requests.post("{}/api/v1/ns/{}/modelserving".format(url,namespace),data=json.dumps(data_to_send))
   
@@ -50,7 +50,7 @@ def deploy(args):
 if __name__ == "__main__":
     import argparse
     parser = argparse.ArgumentParser()
-    parser.add_argument('--env', type=str, default='cluster', required=False)
+    # parser.add_argument('--env', type=str, default='cluster', required=False)
     parser.add_argument('--app-name', type=str, required=True)
     parser.add_argument('--storage-name', type=str, required=True)
     parser.add_argument('--namespace', type=str, required=True)

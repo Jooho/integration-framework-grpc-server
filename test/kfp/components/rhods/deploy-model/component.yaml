@@ -10,11 +10,11 @@ inputs:
   - {name: parameters,   description: 'Required. Parameters for ModelServing template.', default: ''}
 implementation:
   container:
-    image: quay.io/jooholee/rhods-integration-framework-deploy:latest
+    image: quay.io/jooholee/rhods-integration-framework-deploy:0.0.1
     command: ['python']
     args: [
       -u, /app/src/deploy-model.py,
-      --env, {inputValue: env},
+      # --env, {inputValue: env},
       --app-name, {inputValue: app_name},
       --storage-name, {inputValue: storage_name},
       --namespace, {inputValue: namespace},
