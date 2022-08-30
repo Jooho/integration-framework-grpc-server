@@ -1,0 +1,11 @@
+apiVersion: serving.kserve.io/v1alpha1
+kind: Predictor
+metadata:
+  name: example-mnist-predictor
+annotations:
+    serving.kserve.io/deploymentMode: ModelMesh
+    serving.kserve.io/secretKey: localMinIO
+spec:
+  modelType:
+    name: sklearn
+  storageUri: s3://modelmesh-example-models/sklearn/mnist-svm.jobli

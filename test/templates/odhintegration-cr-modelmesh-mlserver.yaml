@@ -1,0 +1,14 @@
+apiVersion: odh.redhat.com/v1alpha1
+kind: ODHIntegration
+metadata:
+  name: mlserver
+  labels:
+    integration: modelserving
+    provider: redhat
+    app: openvino
+spec:
+  template: mlserver-template
+  provider: redhat
+  csvName: opendatahub-operator
+  
+

@@ -1,0 +1,43 @@
+apiVersion: template.openshift.io/v1
+kind: Template
+metadata:
+  annotations:
+    description: OpenVINO Model Server is a high performance model server from Intel
+    tags: integration, isv,modelserving,intel,openvino
+  labels:
+    integration: modelserving
+    provider: intel
+    modelserver.type: openvino
+  name: mlserver-template
+objects:
+- apiVersion: serving.kserve.io/v1beta1
+  kind: InferenceService
+  metadata:
+    name: ${MODEL_SERVER_RESOURCE_NAME}
+    annotations:
+      serving.kserve.io/deploymentMode: ModelMesh
+      serving.kserve.io/secretKey: ${STORAGE_NAME}
+  spec:
+    predictor:
+      model:
+        modelFormat:
+          name: ${MODEL_TYPE}
+        storageUri: ${STORAGE_TYPE}://${AWS_DEFAULT_BUCKET}/${MODEL_PATH}
+parameters:
+  - description: Type of storage, enum of S3, Google, Azure, Local
+    name: STORAGE_TYPE
+    required: true
+  - description: Secret name to access the storage
+    name: STORAGE_NAME
+# END STORAGE PARAMETERS
+  - description: Bucket name
+    name: AWS_DEFAULT_BUCKET
+  - description: Model Path, including the storage prefix
+    # example: sklearn/mnist-svm.joblib
+    name: MODEL_PATH
+    required: true
+  - description: Model type 
+    name: MODEL_TYPE 
+    required: true
+  - description: Name of the Model Server resource
+    name: MODEL_SERVER_RESOURCE_NAME

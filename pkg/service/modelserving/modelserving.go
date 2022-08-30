@@ -191,6 +191,9 @@ func (m *modelServingServer) GetAppCustomResource(ctx context.Context, req *msv1
 	for secretDataKey, secretDataValue := range secret.Data {
 		logger.Log.Debug(fmt.Sprintf("SecretKey:%s", secretDataKey))
 		logger.Log.Debug(fmt.Sprintf("SecretValue:%s", secretDataValue))
+		if secretDataKey == "storageName"{
+			req.Parameters["STORAGE_NAME"] = string(secretDataValue)	
+		}
 		req.Parameters[secretDataKey] = string(secretDataValue)
 	}
 
