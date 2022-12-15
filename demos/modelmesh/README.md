@@ -64,17 +64,17 @@ namespace=modelmesh-demo
 
 - Deploy a model with modelmesh using integration framework server
   ~~~
-cat << EOF > /tmp/params.json
-{
-  "appName": "mlserver",
-  "storageName": "test-mlserver-s3",
-  "parameters": {
-    "MODEL_PATH": "sklearn/mnist-svm.joblib",
-    "MODEL_TYPE": "sklearn",
-    "MODEL_SERVER_RESOURCE_NAME": "example-sklearn-isvc"
-    }
-}
-EOF
+  cat << EOF > /tmp/params.json
+  {
+    "appName": "mlserver",
+    "storageName": "test-mlserver-s3",
+    "parameters": {
+      "MODEL_PATH": "sklearn/mnist-svm.joblib",
+      "MODEL_TYPE": "sklearn",
+      "MODEL_SERVER_RESOURCE_NAME": "example-sklearn-isvc"
+      }
+  }
+  EOF
 
   curl -XPOST  https://integration-framework-server-test-if.${domain}/api/v1/ns/test-if/modelserving  --data "@/tmp/params.json" |jq -r '.manifest|@base64d'| oc create -f -
   ~~~
@@ -82,10 +82,10 @@ EOF
 
 TODO
 -- Modelmesh is using different way about secret. It contains mutiple secret key containing parameters.
- At this moment, modelserving logic try to use a secret that has parametes indivisually as a key.
+At this moment, modelserving logic try to use a secret that has parametes indivisually as a key.
 
 
 
   ~~~
-   oc process mlserver-template -n if-templates -p STORAGE_NAME=test-mlserver-s3 -p MODEL_TYPE=sklearn -p MODEL_PATH=sklearn/mnist-svm.joblib -p MODEL_SERVER_RESOURCE_NAME=example-sklearn-isvc -p  AWS_DEFAULT_BUCKET=modelmesh-example-models -p STORAGE_TYPE=s3|oc create -f -
-   ~~~
+  oc process mlserver-template -n if-templates -p STORAGE_NAME=test-mlserver-s3 -p MODEL_TYPE=sklearn -p MODEL_PATH=sklearn/mnist-svm.joblib -p MODEL_SERVER_RESOURCE_NAME=example-sklearn-isvc -p  AWS_DEFAULT_BUCKET=modelmesh-example-models -p STORAGE_TYPE=s3|oc create -f -
+  ~~~
